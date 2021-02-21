@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beacon
+  namespace: prysm
+  labels:
+    app: beacon
+spec:
+  selector:
+    matchLabels:
+      app: beacon
+  replicas: 1
+  strategy: 
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: beacon
+    spec:
+      containers:
+      - name: beacon
+        image: gcr.io/prysmaticlabs/prysm/beacon-chain:v1.2.2
+        args:
+        - --pyrmont 
+        - --rpc-host=0.0.0.0
+        - --http-web3provider=https://eth-goerli.alchemyapi.io/v2/-2AY9NSSlTKbstrjdTT90nSM-jEYMHnB
+        - --datadir=/data/prysm/beacon 
+        - --accept-terms-of-use
+        ports:
+        - containerPort: 13000
+          hostPort: 13000
+          protocol: TCP
+        - containerPort: 12000
+          hostPort: 12000
+          protocol: UDP
+        - containerPort: 4000
+          protocol: TCP
+          hostPort: 4000
+        volumeMounts:
+        - name: beacon-storage
+          mountPath: /data/prysm/beacon
+      volumes:
+      - name: beacon-storage
+        hostPath:
+          path: /data/prysm/beacon
+      serviceAccountName: beacon
+      restartPolicy: Always

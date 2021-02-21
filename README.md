@@ -16,20 +16,20 @@ This example demonstrates how to run one validator client and one beacon node us
     mkdir -p /data/prysm/validator /data/prysm/beacon
     ```
 
-2. Clone this repo and navigate to `kind/config` folder.
+2. Clone this repo.
     ```
     git clone https://github.com/eth2xk8s/eth2xk8s.git
-    cd kind
     ```
 
-3. Update the `extraMounts` in `single-node.yaml` with the path to the created data folder.
+3. Update the `extraMounts` in `kind/config/single-node.yaml` with the path to the created data folder.
 
 4. Create the validator wallet and replace `example-password` with your wallet password in `wallet-secret.yaml`.
 
 ### Create and config the cluster
 
-1. Create a kind cluster with configurations.
+1. Navigate to `kind` directory and create a kind cluster with the `single-node.yaml` configuration.
     ``` 
+    cd eth2xk8s/kind
     kind create cluster --config=config/single-node.yaml
     ```
 

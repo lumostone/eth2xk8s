@@ -21,13 +21,15 @@ This example demonstrates how to run one validator client and one beacon node us
     git clone https://github.com/eth2xk8s/eth2xk8s.git
     ```
 
-3. Update the `extraMounts` in `kind/config/single-node.yaml` with the path to the created data folder.
+3. Update the `extraMounts` in `kind-host-path/config/single-node.yaml` with the path to the created data folder.
 
 4. Create the validator wallet and replace `example-password` with your wallet password in `wallet-secret.yaml`.
 
+5. Replace `<goerli eth1 node>` in `kind-host-path/beacon-deployment.yaml` with your eth1 node endpoint.
+
 ### Create and config the cluster
 
-1. Navigate to `kind` directory and create a kind cluster with the `single-node.yaml` configuration.
+1. Navigate to `kind-host-path` directory and create a kind cluster with the `single-node.yaml` configuration.
     ``` 
     cd eth2xk8s/kind
     kind create cluster --config=config/single-node.yaml

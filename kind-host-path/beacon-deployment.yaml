@@ -23,7 +23,7 @@ spec:
         args:
         - --pyrmont 
         - --rpc-host=0.0.0.0
-        - --http-web3provider=https://eth-goerli.alchemyapi.io/v2/-2AY9NSSlTKbstrjdTT90nSM-jEYMHnB
+        - --http-web3provider=<goerli eth1 node>
         - --datadir=/data/prysm/beacon 
         - --accept-terms-of-use
         ports:

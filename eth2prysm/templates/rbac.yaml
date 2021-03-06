@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.beacon.serviceAccount }}
+  namespace: {{ .Values.namespace }}
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ .Values.namespace }}
+rules:
+- apiGroups: ['policy']
+  resources: ['podsecuritypolicies']
+  verbs:     ['use']
+- apiGroups: [""]
+  resources: ["secrets", "configmaps"]
+  verbs: ["get", "watch", "list"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name:  {{ .Values.namespace }}-rolebinding
+roleRef:
+  kind: ClusterRole
+  name:  {{ .Values.namespace }}
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+# Authorize specific service accounts:
+- kind: ServiceAccount
+  name: {{ .Values.beacon.serviceAccount }}
+  namespace: {{ .Values.namespace }}

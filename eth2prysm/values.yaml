@@ -1,0 +1,18 @@
+# Default values for eth2prysm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+namespace: prysm
+ethereumNetwork: pyrmont
+imageVersion: v1.3.2
+
+beacon:
+  name: beacon
+  label: beacon
+  serviceAccount: beacon
+  dataMountPath: /data/prysm/beacon
+  dataHostPath: /data/prysm/beacon
+  web3provider: http://127.0.0.1:8545
+  p2pUdpPort: 12000
+  p2pTcpPort: 13000
+  rpcPort: 4000

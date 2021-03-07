@@ -16,3 +16,15 @@ beacon:
   p2pUdpPort: 12000
   p2pTcpPort: 13000
   rpcPort: 4000
+
+validator:
+  name: validator
+  label: validator
+  serviceAccount: validator
+  startWaitTime: 780
+  dataMountPath: /data/prysm/validator
+  dataHostPath: /data/prysm/validator
+  graffiti: "eth2 x k8s"
+  walletPassword: "example-password"
+  walletMountPath: /data/prysm/wallet
+  walletHostPath: /data/prysm/wallet

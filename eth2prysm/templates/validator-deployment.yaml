@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.validator.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.validator.label }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.validator.label }}
+  replicas: 1
+  strategy: 
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.validator.label }}
+    spec:
+      initContainers:
+      - name: init-wait
+        image: alpine:3.13.2
+        command: ['sh', '-c', 'echo "Wait for {{ .Values.validator.startWaitTime }} second(s) for extra slashing protection!" && sleep {{ .Values.validator.startWaitTime }}']
+      containers:
+      - name: {{ .Values.validator.name }}
+        image: gcr.io/prysmaticlabs/prysm/validator:{{ .Values.imageVersion }}
+        args:
+        - --{{ .Values.ethereumNetwork }}  
+        - --beacon-rpc-provider={{ .Values.beacon.name }}-service.{{ .Values.namespace }}.svc.cluster.local:{{ .Values.beacon.rpcPort }}
+        - --datadir={{ .Values.validator.dataMountPath }} 
+        {{- if (and .Values.validator.walletHostPath .Values.validator.walletMountPath) }}
+        - --wallet-dir={{ .Values.validator.walletMountPath }} 
+        {{- else }}
+        - --wallet-dir={{ .Values.validator.dataMountPath }} 
+        {{- end }}
+        - --wallet-password-file=/data/prysm/password/wallet_pass.txt
+        - --graffiti={{ .Values.validator.graffiti | quote }} 
+        - --accept-terms-of-use
+        volumeMounts:
+        - name: validator-storage
+          mountPath: {{ .Values.validator.dataMountPath }} 
+          readOnly: false
+        - name: wallet-password
+          mountPath: /data/prysm/password
+          readOnly: true
+        {{- if  (and .Values.validator.walletHostPath .Values.validator.walletMountPath) }}
+        - name: wallet-storage
+          mountPath: {{ .Values.validator.walletMountPath }} 
+          readOnly: false
+        {{- end }}
+      volumes:
+      - name: validator-storage
+        hostPath:
+          path: {{ .Values.validator.dataHostPath }}
+      {{- if .Values.validator.walletHostPath }}
+      - name: wallet-storage 
+        hostPath:
+          path: {{ .Values.validator.walletHostPath }}
+      {{- end }}
+      - name: wallet-password
+        secret:
+          secretName: wallet-password
+          items:
+          - key: password
+            path: wallet_pass.txt
+      serviceAccountName: {{ .Values.validator.serviceAccount }}
+      restartPolicy: Always

@@ -8,3 +8,5 @@ nodes:
     containerPath: /data/prysm/validator
   - hostPath: /data/prysm/beacon
     containerPath: /data/prysm/beacon
+  - hostPath: /data/prysm/wallet
+    containerPath: /data/prysm/wallet

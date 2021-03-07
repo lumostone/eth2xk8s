@@ -5,6 +5,13 @@ metadata:
   namespace: {{ .Values.namespace }}
 
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.validator.serviceAccount }}
+  namespace: {{ .Values.namespace }}
+
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -30,4 +37,7 @@ subjects:
 # Authorize specific service accounts:
 - kind: ServiceAccount
   name: {{ .Values.beacon.serviceAccount }}
+  namespace: {{ .Values.namespace }}
+- kind: ServiceAccount
+  name: {{ .Values.validator.serviceAccount }}
   namespace: {{ .Values.namespace }}

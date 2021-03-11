@@ -4,18 +4,18 @@ metadata:
   name: {{ .Values.validator.name }}
   namespace: {{ .Values.namespace }}
   labels:
-    app: {{ .Values.validator.label }}
+    app: {{ .Values.validator.name }}
 spec:
   selector:
     matchLabels:
-      app: {{ .Values.validator.label }}
+      app: {{ .Values.validator.name }}
   replicas: 1
   strategy: 
     type: Recreate
   template:
     metadata:
       labels:
-        app: {{ .Values.validator.label }}
+        app: {{ .Values.validator.name }}
     spec:
       initContainers:
       - name: init-wait
@@ -25,43 +25,37 @@ spec:
       - name: {{ .Values.validator.name }}
         image: gcr.io/prysmaticlabs/prysm/validator:{{ .Values.imageVersion }}
         args:
-        - --{{ .Values.ethereumNetwork }}  
-        - --beacon-rpc-provider={{ .Values.beacon.name }}-service.{{ .Values.namespace }}.svc.cluster.local:{{ .Values.beacon.rpcPort }}
-        - --datadir={{ .Values.validator.dataMountPath }} 
-        {{- if (and .Values.validator.walletHostPath .Values.validator.walletMountPath) }}
-        - --wallet-dir={{ .Values.validator.walletMountPath }} 
-        {{- else }}
-        - --wallet-dir={{ .Values.validator.dataMountPath }} 
-        {{- end }}
+        {{- if .Values.ethereumTestnet }}
+        - --{{ .Values.ethereumTestnet }}
+        {{- end}} 
+        - --beacon-rpc-provider={{ .Values.beacon.name }}-service.{{ .Values.namespace }}.svc.cluster.local:4000
+        - --datadir=/data/prysm/validator 
+        - --wallet-dir=/data/prysm/wallet 
         - --wallet-password-file=/data/prysm/password/wallet_pass.txt
         - --graffiti={{ .Values.validator.graffiti | quote }} 
         - --accept-terms-of-use
         volumeMounts:
         - name: validator-storage
-          mountPath: {{ .Values.validator.dataMountPath }} 
+          mountPath: /data/prysm/validator 
+          readOnly: false
+        - name: wallet-storage
+          mountPath: /data/prysm/wallet 
           readOnly: false
         - name: wallet-password
           mountPath: /data/prysm/password
           readOnly: true
-        {{- if  (and .Values.validator.walletHostPath .Values.validator.walletMountPath) }}
-        - name: wallet-storage
-          mountPath: {{ .Values.validator.walletMountPath }} 
-          readOnly: false
-        {{- end }}
       volumes:
       - name: validator-storage
         hostPath:
           path: {{ .Values.validator.dataHostPath }}
-      {{- if .Values.validator.walletHostPath }}
       - name: wallet-storage 
         hostPath:
           path: {{ .Values.validator.walletHostPath }}
-      {{- end }}
       - name: wallet-password
         secret:
           secretName: wallet-password
           items:
           - key: password
             path: wallet_pass.txt
-      serviceAccountName: {{ .Values.validator.serviceAccount }}
+      serviceAccountName: validator
       restartPolicy: Always

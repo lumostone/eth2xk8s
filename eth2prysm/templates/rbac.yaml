@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ .Values.beacon.serviceAccount }}
+  name: beacon
   namespace: {{ .Values.namespace }}
 
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ .Values.validator.serviceAccount }}
+  name: validator
   namespace: {{ .Values.namespace }}
 
 ---
@@ -36,8 +36,8 @@ roleRef:
 subjects:
 # Authorize specific service accounts:
 - kind: ServiceAccount
-  name: {{ .Values.beacon.serviceAccount }}
+  name: beacon
   namespace: {{ .Values.namespace }}
 - kind: ServiceAccount
-  name: {{ .Values.validator.serviceAccount }}
+  name: validator
   namespace: {{ .Values.namespace }}

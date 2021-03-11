@@ -8,5 +8,5 @@ spec:
     app: {{ .Values.beacon.name }}
   ports:
     - protocol: TCP
-      port: {{ .Values.beacon.rpcPort }}
-      targetPort: {{ .Values.beacon.rpcPort }}
+      port: 4000
+      targetPort: 4000

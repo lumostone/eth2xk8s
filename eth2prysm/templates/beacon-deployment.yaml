@@ -1,41 +1,47 @@
+{{- with .Values.beacon }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.beacon.name }}
-  namespace: {{ .Values.namespace }}
+  name: {{ .name }}
+  namespace: {{ $.Values.namespace }}
   labels:
-    app: {{ .Values.beacon.name }}
+    app: {{ .name }}
 spec:
   selector:
     matchLabels:
-      app: {{ .Values.beacon.name }}
+      app: {{ .name }}
   replicas: 1
   strategy: 
     type: Recreate
   template:
     metadata:
       labels:
-        app: {{ .Values.beacon.name }}
+        app: {{ .name }}
     spec:
       containers:
-      - name: {{ .Values.beacon.name }}
-        image: gcr.io/prysmaticlabs/prysm/beacon-chain:{{ .Values.imageVersion }}
+      - name: {{ .name }}
+        {{- with $.Values.image }}
+        image: "{{ .beaconImage }}:{{ .version }}"
+        {{- end }}
         args:
-        {{- if .Values.ethereumTestnet }}
-        - --{{ .Values.ethereumTestnet }}
+        {{- if $.Values.ethereumTestnet }}
+        - --{{ $.Values.ethereumTestnet }}
         {{- end}}
         - --rpc-host=0.0.0.0
-        - --p2p-tcp-port={{ .Values.beacon.p2pTcpPort }}
-        - --p2p-udp-port={{ .Values.beacon.p2pUdpPort }}
-        - --http-web3provider={{ .Values.beacon.web3provider }}
+        - --p2p-tcp-port={{ .p2pTcpPort }}
+        - --p2p-udp-port={{ .p2pUdpPort }}
+        - --http-web3provider={{ .web3Provider }}
+        {{- range .fallbackWeb3Providers }}
+        - --fallback-web3provider={{ . }}
+        {{- end }}
         - --datadir=/data/prysm/beacon
         - --accept-terms-of-use
         ports:
-        - containerPort: {{ .Values.beacon.p2pTcpPort }}
-          hostPort: {{ .Values.beacon.p2pTcpPort }}
+        - containerPort: {{ .p2pTcpPort }}
+          hostPort: {{ .p2pTcpPort }}
           protocol: TCP
-        - containerPort: {{ .Values.beacon.p2pUdpPort }}
-          hostPort: {{ .Values.beacon.p2pUdpPort }}
+        - containerPort: {{ .p2pUdpPort }}
+          hostPort: {{ .p2pUdpPort }}
           protocol: UDP
         - containerPort: 4000
           protocol: TCP
@@ -45,7 +51,20 @@ spec:
           mountPath: /data/prysm/beacon
       volumes:
       - name: beacon-storage
+        {{- if $.Values.nfsEnabled }}
+        nfs:
+          path: {{ .dataVolumePath }}
+          server: {{ $.Values.nfsServerIp }}
+          readOnly: false
+        {{- else}}
         hostPath:
-          path: {{ .Values.beacon.dataHostPath }}
+          path: {{ .dataVolumePath }}
+        {{- end}}
+      {{- if $.Values.nfsEnabled }}
+      securityContext:
+        runAsUser: {{ $.Values.nfsUser }}
+        runAsGroup: {{ $.Values.nfsGroup }} 
+      {{- end}}
       serviceAccountName: beacon
       restartPolicy: Always
+{{- end }}

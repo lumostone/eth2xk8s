@@ -1,38 +1,43 @@
+{{- range $key, $validator := .Values.validators }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.validator.name }}
-  namespace: {{ .Values.namespace }}
+  name: {{ $validator.name }}
+  namespace: {{ $.Values.namespace }}
   labels:
-    app: {{ .Values.validator.name }}
+    app: {{ $validator.name }}
 spec:
   selector:
     matchLabels:
-      app: {{ .Values.validator.name }}
+      app: {{ $validator.name }}
   replicas: 1
   strategy: 
     type: Recreate
   template:
     metadata:
       labels:
-        app: {{ .Values.validator.name }}
+        app: {{ $validator.name }}
+      annotations:
+        checksum/config: {{ $validator.walletPassword | sha256sum }}
     spec:
       initContainers:
       - name: init-wait
         image: alpine:3.13.2
-        command: ['sh', '-c', 'echo "Wait for {{ .Values.validator.startWaitTime }} second(s) for extra slashing protection!" && sleep {{ .Values.validator.startWaitTime }}']
+        command: ['sh', '-c', 'echo "Wait for {{ $validator.startWaitTime }} second(s) for extra slashing protection!" && sleep {{ $validator.startWaitTime }}']
       containers:
-      - name: {{ .Values.validator.name }}
-        image: gcr.io/prysmaticlabs/prysm/validator:{{ .Values.imageVersion }}
+      - name: {{ $validator.name }}
+        {{- with $.Values.image }}
+        image: "{{ .validatorImage }}:{{ .version }}"
+        {{- end }}
         args:
-        {{- if .Values.ethereumTestnet }}
-        - --{{ .Values.ethereumTestnet }}
+        {{- if $.Values.ethereumTestnet }}
+        - --{{ $.Values.ethereumTestnet }}
         {{- end}} 
-        - --beacon-rpc-provider={{ .Values.beacon.name }}-service.{{ .Values.namespace }}.svc.cluster.local:4000
+        - --beacon-rpc-provider={{ $.Values.beacon.name }}-service.{{ $.Values.namespace }}.svc.cluster.local:4000
         - --datadir=/data/prysm/validator 
         - --wallet-dir=/data/prysm/wallet 
         - --wallet-password-file=/data/prysm/password/wallet_pass.txt
-        - --graffiti={{ .Values.validator.graffiti | quote }} 
+        - --graffiti={{ $validator.graffiti | quote }} 
         - --accept-terms-of-use
         volumeMounts:
         - name: validator-storage
@@ -46,16 +51,38 @@ spec:
           readOnly: true
       volumes:
       - name: validator-storage
+        {{- if $.Values.nfsEnabled }}
+        nfs:
+          path: {{ $validator.dataVolumePath }}
+          server: {{ $.Values.nfsServerIp }}
+          readOnly: false
+        {{- else }}
         hostPath:
-          path: {{ .Values.validator.dataHostPath }}
-      - name: wallet-storage 
+          path: {{ $validator.dataVolumePath }}
+        {{- end }}
+      - name: wallet-storage
+        {{- if $.Values.nfsEnabled }}
+        nfs:
+          path: {{ $validator.walletVolumePath }}
+          server: {{ $.Values.nfsServerIp }}
+          readOnly: false
+        {{- else }}
         hostPath:
-          path: {{ .Values.validator.walletHostPath }}
+          path: {{ $validator.walletVolumePath }}
+        {{- end }}
       - name: wallet-password
         secret:
-          secretName: wallet-password
+          secretName: {{ $validator.walletPasswordSecretName }}
           items:
           - key: password
             path: wallet_pass.txt
+      {{- if $.Values.nfsEnabled }}
+      securityContext:
+        runAsUser: {{ $.Values.nfsUser }}
+        runAsGroup: {{ $.Values.nfsGroup }}
+      {{- end }}
       serviceAccountName: validator
       restartPolicy: Always
+
+---
+{{- end}}

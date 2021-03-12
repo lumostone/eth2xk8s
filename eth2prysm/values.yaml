@@ -2,21 +2,45 @@
 # This is a YAML-formatted file.
 
 namespace: prysm
-imageVersion: v1.3.3
 
 ethereumTestnet: pyrmont
 
+nfsEnabled: true
+nfsServerIp: 172.20.10.10
+nfsUser: 1001
+nfsGroup: 2000
+
+image:
+  beaconImage: gcr.io/prysmaticlabs/prysm/beacon-chain
+  validatorImage: gcr.io/prysmaticlabs/prysm/validator 
+  version: v1.3.3
+
 beacon:
   name: beacon
-  dataHostPath: /data/prysm/beacon
-  web3provider: http://127.0.0.1:8545
+  dataVolumePath: /data/prysm/beacon
   p2pUdpPort: 12000
   p2pTcpPort: 13000
+  web3Provider: http://127.0.0.1:8545
+  fallbackWeb3Providers:
+    - http://127.0.0.1:8546
+    - http://127.0.0.1:8547
 
-validator:
-  name: validator
-  startWaitTime: 780
-  dataHostPath: /data/prysm/validator
-  graffiti: "eth2 x k8s"
-  walletHostPath: /data/prysm/wallet
-  walletPassword: "example-password"
+validators:
+  validator1:
+    name: validator1
+    dataVolumePath: /data/prysm/validator-1
+    walletVolumePath: /data/prysm/wallet-1
+    walletPasswordSecretName: wallet-password-1
+    walletPassword: "example-password-1"
+    startWaitTime: 780
+    graffiti: "eth2 x k8s"
+    
+  validator2:
+    name: validator2
+    dataVolumePath: /data/prysm/validator-2
+    walletVolumePath: /data/prysm/wallet-2
+    walletPasswordSecretName: wallet-password-2
+    walletPassword: "example-password-2"
+    startWaitTime: 780
+    graffiti: "eth2 x k8s"
+    

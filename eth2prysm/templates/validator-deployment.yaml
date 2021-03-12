@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.validator.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.validator.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.validator.name }}
+  replicas: 1
+  strategy: 
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.validator.name }}
+    spec:
+      initContainers:
+      - name: init-wait
+        image: alpine:3.13.2
+        command: ['sh', '-c', 'echo "Wait for {{ .Values.validator.startWaitTime }} second(s) for extra slashing protection!" && sleep {{ .Values.validator.startWaitTime }}']
+      containers:
+      - name: {{ .Values.validator.name }}
+        image: gcr.io/prysmaticlabs/prysm/validator:{{ .Values.imageVersion }}
+        args:
+        {{- if .Values.ethereumTestnet }}
+        - --{{ .Values.ethereumTestnet }}
+        {{- end}} 
+        - --beacon-rpc-provider={{ .Values.beacon.name }}-service.{{ .Values.namespace }}.svc.cluster.local:4000
+        - --datadir=/data/prysm/validator 
+        - --wallet-dir=/data/prysm/wallet 
+        - --wallet-password-file=/data/prysm/password/wallet_pass.txt
+        - --graffiti={{ .Values.validator.graffiti | quote }} 
+        - --accept-terms-of-use
+        volumeMounts:
+        - name: validator-storage
+          mountPath: /data/prysm/validator 
+          readOnly: false
+        - name: wallet-storage
+          mountPath: /data/prysm/wallet 
+          readOnly: false
+        - name: wallet-password
+          mountPath: /data/prysm/password
+          readOnly: true
+      volumes:
+      - name: validator-storage
+        hostPath:
+          path: {{ .Values.validator.dataHostPath }}
+      - name: wallet-storage 
+        hostPath:
+          path: {{ .Values.validator.walletHostPath }}
+      - name: wallet-password
+        secret:
+          secretName: wallet-password
+          items:
+          - key: password
+            path: wallet_pass.txt
+      serviceAccountName: validator
+      restartPolicy: Always

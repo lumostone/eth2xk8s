@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.beacon.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.beacon.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.beacon.name }}
+  replicas: 1
+  strategy: 
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.beacon.name }}
+    spec:
+      containers:
+      - name: {{ .Values.beacon.name }}
+        image: gcr.io/prysmaticlabs/prysm/beacon-chain:{{ .Values.imageVersion }}
+        args:
+        {{- if .Values.ethereumTestnet }}
+        - --{{ .Values.ethereumTestnet }}
+        {{- end}}
+        - --rpc-host=0.0.0.0
+        - --p2p-tcp-port={{ .Values.beacon.p2pTcpPort }}
+        - --p2p-udp-port={{ .Values.beacon.p2pUdpPort }}
+        - --http-web3provider={{ .Values.beacon.web3provider }}
+        - --datadir=/data/prysm/beacon
+        - --accept-terms-of-use
+        ports:
+        - containerPort: {{ .Values.beacon.p2pTcpPort }}
+          hostPort: {{ .Values.beacon.p2pTcpPort }}
+          protocol: TCP
+        - containerPort: {{ .Values.beacon.p2pUdpPort }}
+          hostPort: {{ .Values.beacon.p2pUdpPort }}
+          protocol: UDP
+        - containerPort: 4000
+          protocol: TCP
+          hostPort: 4000
+        volumeMounts:
+        - name: beacon-storage
+          mountPath: /data/prysm/beacon
+      volumes:
+      - name: beacon-storage
+        hostPath:
+          path: {{ .Values.beacon.dataHostPath }}
+      serviceAccountName: beacon
+      restartPolicy: Always

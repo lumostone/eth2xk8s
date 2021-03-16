@@ -23,16 +23,14 @@ spec:
       initContainers:
       - name: init-wait
         image: alpine:3.13.2
-        command: ['sh', '-c', 'echo "Wait for {{ $validator.startWaitTime }} second(s) for extra slashing protection!" && sleep {{ $validator.startWaitTime }}']
+        command: ['sh', '-c', 'echo "Wait for {{ $.Values.validatorStartWaitTime }} second(s) for extra slashing protection!" && sleep {{ $.Values.validatorStartWaitTime }}']
       containers:
       - name: {{ $validator.name }}
-        {{- with $.Values.image }}
-        image: "{{ .validatorImage }}:{{ .version }}"
-        {{- end }}
+        image: "{{ $.Values.image.validatorImage }}:{{ $.Values.image.version }}"
         args:
         {{- if $.Values.ethereumTestnet }}
         - --{{ $.Values.ethereumTestnet }}
-        {{- end}} 
+        {{- end }}
         - --beacon-rpc-provider={{ $.Values.beacon.name }}-service.{{ $.Values.namespace }}.svc.cluster.local:4000
         - --datadir=/data/prysm/validator 
         - --wallet-dir=/data/prysm/wallet 
@@ -51,20 +49,20 @@ spec:
           readOnly: true
       volumes:
       - name: validator-storage
-        {{- if $.Values.nfsEnabled }}
+        {{- if eq $.Values.persistentVolumeType "nfs" }}
         nfs:
           path: {{ $validator.dataVolumePath }}
-          server: {{ $.Values.nfsServerIp }}
+          server: {{ $.Values.nfs.serverIp }}
           readOnly: false
         {{- else }}
         hostPath:
           path: {{ $validator.dataVolumePath }}
         {{- end }}
       - name: wallet-storage
-        {{- if $.Values.nfsEnabled }}
+        {{- if eq $.Values.persistentVolumeType "nfs" }}
         nfs:
           path: {{ $validator.walletVolumePath }}
-          server: {{ $.Values.nfsServerIp }}
+          server: {{ $.Values.nfs.serverIp }}
           readOnly: false
         {{- else }}
         hostPath:
@@ -76,13 +74,13 @@ spec:
           items:
           - key: password
             path: wallet_pass.txt
-      {{- if $.Values.nfsEnabled }}
+      {{- if eq $.Values.persistentVolumeType "nfs" }}
       securityContext:
-        runAsUser: {{ $.Values.nfsUser }}
-        runAsGroup: {{ $.Values.nfsGroup }}
+        runAsUser: {{ $.Values.nfs.user }}
+        runAsGroup: {{ $.Values.nfs.group }}
       {{- end }}
       serviceAccountName: validator
       restartPolicy: Always
 
 ---
-{{- end}}
+{{- end }}

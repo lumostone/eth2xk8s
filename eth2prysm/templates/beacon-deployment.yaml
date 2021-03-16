@@ -20,13 +20,11 @@ spec:
     spec:
       containers:
       - name: {{ .name }}
-        {{- with $.Values.image }}
-        image: "{{ .beaconImage }}:{{ .version }}"
-        {{- end }}
+        image: "{{ $.Values.image.beaconImage }}:{{ $.Values.image.version }}"
         args:
         {{- if $.Values.ethereumTestnet }}
         - --{{ $.Values.ethereumTestnet }}
-        {{- end}}
+        {{- end }}
         - --rpc-host=0.0.0.0
         - --p2p-tcp-port={{ .p2pTcpPort }}
         - --p2p-udp-port={{ .p2pUdpPort }}
@@ -51,20 +49,20 @@ spec:
           mountPath: /data/prysm/beacon
       volumes:
       - name: beacon-storage
-        {{- if $.Values.nfsEnabled }}
+        {{- if eq $.Values.persistentVolumeType "nfs" }}
         nfs:
           path: {{ .dataVolumePath }}
-          server: {{ $.Values.nfsServerIp }}
+          server: {{ $.Values.nfs.serverIp }}
           readOnly: false
-        {{- else}}
+        {{- else }}
         hostPath:
           path: {{ .dataVolumePath }}
-        {{- end}}
-      {{- if $.Values.nfsEnabled }}
+        {{- end }}
+      {{- if eq $.Values.persistentVolumeType "nfs" }}
       securityContext:
-        runAsUser: {{ $.Values.nfsUser }}
-        runAsGroup: {{ $.Values.nfsGroup }} 
-      {{- end}}
+        runAsUser: {{ $.Values.nfs.user }}
+        runAsGroup: {{ $.Values.nfs.group }} 
+      {{- end }}
       serviceAccountName: beacon
       restartPolicy: Always
 {{- end }}

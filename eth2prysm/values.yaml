@@ -5,10 +5,14 @@ namespace: prysm
 
 ethereumTestnet: pyrmont
 
-nfsEnabled: true
-nfsServerIp: 172.20.10.10
-nfsUser: 1001
-nfsGroup: 2000
+# A required field that determines the persistent storage type. Default to hostPath.
+# Available options: nfs and hostPath.
+persistentVolumeType: "nfs"
+
+nfs:
+  serverIp: 172.20.10.10
+  user: 1001
+  group: 2000
 
 image:
   beaconImage: gcr.io/prysmaticlabs/prysm/beacon-chain
@@ -25,14 +29,17 @@ beacon:
     - http://127.0.0.1:8546
     - http://127.0.0.1:8547
 
+# This field determines how long it will wait before the validator starts or restarts.
+# It's a way to protect the validator from double attesting or block proposing when the DB is out-of-date.
+validatorStartWaitTime: 780
+
 validators:
   validator1:
     name: validator1
     dataVolumePath: /data/prysm/validator-1
     walletVolumePath: /data/prysm/wallet-1
     walletPasswordSecretName: wallet-password-1
-    walletPassword: "example-password-1"
-    startWaitTime: 780
+    walletPassword: "example-password-1"  
     graffiti: "eth2 x k8s"
     
   validator2:
@@ -41,6 +48,5 @@ validators:
     walletVolumePath: /data/prysm/wallet-2
     walletPasswordSecretName: wallet-password-2
     walletPassword: "example-password-2"
-    startWaitTime: 780
     graffiti: "eth2 x k8s"
     

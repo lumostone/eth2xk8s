@@ -49,4 +49,3 @@ validators:
     walletPasswordSecretName: wallet-password-2
     walletPassword: "example-password-2"
     graffiti: "eth2 x k8s"
-    

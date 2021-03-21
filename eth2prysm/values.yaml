@@ -104,7 +104,7 @@ validators:
     graffiti: "eth2 x k8s"
   
   # You can add more validators below. The name of a new validator section can be validator3 or anything else that you prefer
-  # as long as the section contains all the fields under the section name.
+  # as long as the section has the same indentation as other validator sections and contains all the fields under the section name.
   # validator3:
   #   name: 
   #   dataVolumePath: 

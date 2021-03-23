@@ -21,7 +21,7 @@ If the goal is to run Prysm on mainnet, we recommend to use
 
 1. Set up NFS (Example: [Guide for NFS installation and configuration on Ubuntu](https://ubuntu.com/server/docs/service-nfs)).
 
-2. Create beacon node and validator data folders with the correct ownership (we use uid 1001 and gid 2000) on NFS.
+2. Create beacon node and validator data folders with the correct ownership (our Helm chart uses uid 1001 and gid 2000 by default) on NFS.
 
 3. Create the wallet folder on NFS and import validator accounts (Example: [Import your validator accounts into Prysm](https://docs.prylabs.network/docs/mainnet/joining-eth2#step-4-import-your-validator-accounts-into-prysm)).
 
@@ -37,14 +37,14 @@ If the goal is to run Prysm on mainnet, we recommend to use
 
 2. Change values in `./eth2prysm/values.yaml`.
 
-   It's recommended to read through each field in `values.yaml` and determine the desired values. Fields that need to be changed or verified before installing the chart are the following ones:
+   We recommend checking each field in `values.yaml` to determine the desired configuration. Fields that need to be changed or verified before installing the chart are the following ones:
 
    - **nfs.serverIp**: NFS server IP address.
    - **image.version**: Prysm client version.
-   - **beacon.dataVolumePath**: The beacon node data volume path/folder on NFS.
+   - **beacon.dataVolumePath**: The path to the data directory on the NFS for the beacon node.
    - **beacon.web3Provider** and **beacon.fallbackWeb3Providers**: Ethereum 1 node endpoints.
-   - **validators.validator1.dataVolumePath**: The validator data volume path/folder on NFS.
-   - **validators.validator1.walletVolumePath**: The wallet data volume path/folder on NFS.
+   - **validators.validator1.dataVolumePath**: The path to the data directory on the NFS for the validator.
+   - **validators.validator1.walletVolumePath**: The path to the data directory on the NFS for the wallet.
    - **validators.validator1.walletPassword**: The wallet password.
 
 ### Install, upgrade, roll back and uninstall Helm chart
@@ -103,7 +103,7 @@ Replace `[release-name]` in the following command to the name you prefer.
 
 ## For Development or Testing
 
-If you want to develop for this project or verify your configuration quickly, we recommend the following setup:
+If you want to develop for this project or verify your configuration quickly without setting up NFS or other storage solution, we recommend the following setup:
 
 - [kind](https://kind.sigs.k8s.io/) as the k8s distribution.
 - [hostPath](https://kubernetes.io/docs/concepts/storage/volumes/#hostpath) as the persistent storage.

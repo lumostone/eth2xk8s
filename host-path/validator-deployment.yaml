@@ -23,7 +23,7 @@ spec:
         command: ['sh', '-c', 'echo Wait for 780 seconds for extra slashing protection! && sleep 780']
       containers:
       - name: validator
-        image: gcr.io/prysmaticlabs/prysm/validator:v1.2.2
+        image: gcr.io/prysmaticlabs/prysm/validator:v1.3.4
         args:
         - --pyrmont 
         - --beacon-rpc-provider=beacon-service.prysm.svc.cluster.local:4000

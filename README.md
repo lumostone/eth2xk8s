@@ -1,51 +1,135 @@
 # Eth2xK8s: Ethereum Staking with Kubernetes
 
-## Testing the manifests with kind
+This repository contains Kubernetes (k8s) manifests and Helm charts that help Ethereum 2.0 stakers easily and safely install, upgrade and roll back Ethereum 2.0 clients. There are many [Ethereum 2.0 clients](https://ethereum.org/en/eth2/get-involved/#clients) and this project starts with [Prysm](https://docs.prylabs.network/docs/getting-started).
 
-This example demonstrates how to run one validator client and one beacon node using [Prsym](https://docs.prylabs.network/docs/getting-started) in a single node kubernetes with [kind](https://kind.sigs.k8s.io/). This setup uses `hostPath` to store beacon and validator's data with the host mount added on the kind node. Please note this configuration is for testing only.
+**This project is still in development and it's NOT recommended to be used on mainnet.**
+
+## Install Prysm beacon node and validator with Helm
+
+If the goal is to run Prysm on mainnet, we recommend to use
+
+- Production-grade k8s distribution to build a k8s cluster.
+- [NFS](https://en.wikipedia.org/wiki/Network_File_System) as the persistent storage.
+- [Helm](https://helm.sh/) to manage packages and releases.
 
 ### Prerequisite
 
-* [kind](https://kind.sigs.k8s.io/)
-* [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+- Install a k8s distribution and build a cluster.
+- [Install Helm](https://helm.sh/docs/intro/install/) on the k8s controller node.
 
-### Prepare the manifests
+### Install and configure NFS
+
+1. Set up NFS (Example: [Guide for NFS installation and configuration on Ubuntu](https://ubuntu.com/server/docs/service-nfs)).
+
+2. Create beacon node and validator data folders with the correct ownership (our Helm chart uses uid 1001 and gid 2000 by default) on NFS.
+
+3. Create the wallet folder on NFS and import validator accounts (Example: [Import your validator accounts into Prysm](https://docs.prylabs.network/docs/mainnet/joining-eth2#step-4-import-your-validator-accounts-into-prysm)).
+
+4. Export created data and wallet folders as described in the NFS configuration guide.
+
+### Change the configurations to match your environment
 
 1. Clone this repo.
-    ```
+
+    ```bash
     git clone https://github.com/eth2xk8s/eth2xk8s.git
     ```
 
-2. Create the data folders for beacon node and validator on the host machine. For example:
-    ```
-    mkdir -p /data/prysm/validator /data/prysm/beacon
-    ```
+2. Change values in `./eth2prysm/values.yaml`.
 
-3. Update the `extraMounts` in `cluster-config/kind-single-node.yaml` with the path to the created data folder.
+   We recommend checking each field in `values.yaml` to determine the desired configuration. Fields that need to be changed or verified before installing the chart are the following ones:
 
-4. Create the validator wallet and replace `example-password` with your wallet password in `host-path/wallet-secret.yaml`.
+   - **nfs.serverIp**: NFS server IP address.
+   - **image.version**: Prysm client version.
+   - **beacon.dataVolumePath**: The path to the data directory on the NFS for the beacon node.
+   - **beacon.web3Provider** and **beacon.fallbackWeb3Providers**: Ethereum 1 node endpoints.
+   - **validators.validator1.dataVolumePath**: The path to the data directory on the NFS for the validator.
+   - **validators.validator1.walletVolumePath**: The path to the data directory on the NFS for the wallet.
+   - **validators.validator1.walletPassword**: The wallet password.
 
-5. Replace `<goerli eth1 node>` in `host-path/beacon-deployment.yaml` with your eth1 node endpoint.
+### Install, upgrade, roll back and uninstall Helm chart
 
-### Create and config the cluster
+Replace `[release-name]` in the following command to the name you prefer.
 
-1. Create a kind cluster with the `cluster-config/kind-single-node.yaml` configuration.
-    ``` 
-    kind create cluster --config=cluster-config/kind-single-node.yaml
-    ```
+- Install the chart.
 
-2. Navigate to the `host-path` directory. Use the manifests to create the namespace and rbac resources.
-    ```
-    kubectl apply -f namespace.yaml -f rbac.yaml
-    ```
+   ```bash
+   helm install [release-name] ./eth2prysm -nprysm --create-namespace
+   ```
 
-3. Create the beacon node and expose it as a service for validator client.
+- Check installed manifests.
 
-    ```
-    kubectl apply -f beacon-deployment.yaml -f beacon-service.yaml
-    ```
+   ```bash
+   helm get manifest [release-name] -nprysm
+   ```
 
-4. Create the validator client.
-    ```
-    kubectl apply -f wallet-secret.yaml -f validator-deployment.yaml
-    ```
+- Upgrade a release.
+
+   ```bash
+   helm upgrade [release-name] ./eth2prysm -nprysm
+   ```
+
+- Check release history.
+
+   ```bash
+   helm history [release-name] -nprysm
+   ```
+
+- Roll back a release to the target revision. Retrieve the target revision from release history and replace the `[release-revision]`.
+
+   ```bash
+   helm rollback [release-name] [release-revision] -nprysm
+   ```
+
+- Uninstall a release.
+
+   ```bash
+   helm uninstall [release-name] -nprysm
+   ```
+
+### Check client status
+
+- Check the status of beacon node.
+
+   ```bash
+   kubectl logs -f -nprysm -lapp=beacon
+   ```
+
+- Check the status of the first validator (To check other validators, change -lapp to other validators' names).
+
+   ```bash
+   kubectl logs -f -nprysm -lapp=validator1
+   ```
+
+## For Development or Testing
+
+If you want to develop for this project or verify your configuration quickly without setting up NFS or other storage solution, we recommend the following setup:
+
+- [kind](https://kind.sigs.k8s.io/) as the k8s distribution.
+- [hostPath](https://kubernetes.io/docs/concepts/storage/volumes/#hostpath) as the persistent storage.
+- [Helm](https://helm.sh/) to manage packages and releases.
+
+### How to run the Prysm client
+
+1. Clone the repo.
+
+2. Create data and wallet folders on the host machine and import validator accounts.
+
+3. Update the `extraMounts` in `cluster-config/kind-single-node.yaml` with the paths to the created data folders.
+
+4. Install kind and create a kind cluster.
+
+   ```bash
+   kind create cluster --config=cluster-config/kind-single-node.yaml 
+   ```
+
+5. Change values in `./eth2prysm/values.yaml` to match your environment.
+
+   - Set **persistentVolumeType** to `hostPath`.
+   - Follow the [values.yaml configuration section](#change-the-configurations-to-match-your-environment) for more details.
+
+6. Install the Helm chart `./eth2prysm`.
+
+## Testing with k8s manifests
+
+Please see [Testing with manifests and hostPath](https://github.com/eth2xk8s/eth2xk8s/blob/master/host-path/README.md) and [Testing with manifests and NFS](https://github.com/eth2xk8s/eth2xk8s/blob/master/nfs/README.md) for details.

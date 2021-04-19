@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: validator
+  name: validator-client-1
   namespace: lighthouse
   labels:
-    app: validator
+    app: validator-client-1
 spec:
   selector:
     matchLabels:
-      app: validator
+      app: validator-client-1
   replicas: 1
   strategy: 
     type: Recreate
   template:
     metadata:
       labels:
-        app: validator
+        app: validator-client-1
     spec:
       initContainers:
       - name: init-wait
         image: alpine:3.13.2
         command: ['sh', '-c', 'echo Wait for 780 seconds for extra slashing protection! && sleep 780']
       containers:
-      - name: validator
+      - name: validator-client-1
         image: index.docker.io/sigp/lighthouse:v1.3.0
         args:
         - lighthouse
@@ -43,5 +43,5 @@ spec:
       securityContext:
         runAsUser: 1001
         runAsGroup: 2000
-      serviceAccountName: validator
+      serviceAccountName: validator-client
       restartPolicy: Always

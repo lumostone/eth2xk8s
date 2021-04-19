@@ -22,7 +22,7 @@ spec:
         image: index.docker.io/sigp/lighthouse:v1.3.0
         args:
         - lighthouse
-        - --network=pyrmont
+        - --network=prater
         - bn
         - --staking
         - --eth1-endpoints=<goerli eth1 node>

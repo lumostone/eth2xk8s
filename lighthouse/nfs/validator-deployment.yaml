@@ -26,7 +26,7 @@ spec:
         image: index.docker.io/sigp/lighthouse:v1.3.0
         args:
         - lighthouse
-        - --network=pyrmont
+        - --network=prater
         - vc
         - --datadir=/data/lighthouse/validator-client-1
         - --graffiti="eth2 x k8s"

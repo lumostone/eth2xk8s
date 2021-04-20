@@ -28,6 +28,7 @@ spec:
         - lighthouse
         - --network=prater
         - vc
+        - --beacon-nodes=http://beacon-service.lighthouse.svc.cluster.local:5052
         - --datadir=/data/lighthouse/validator-client-1
         - --graffiti="eth2 x k8s"
         volumeMounts:

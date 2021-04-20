@@ -25,6 +25,7 @@ spec:
         - --network=prater
         - bn
         - --staking
+        - --http-address=0.0.0.0
         - --eth1-endpoints=<goerli eth1 node>
         - --datadir=/data/lighthouse/beacon
         ports:

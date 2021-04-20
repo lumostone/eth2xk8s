@@ -1,0 +1,10 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  # add a mount from /path/to/my/files on the host to /files on the node
+  extraMounts:
+  - hostPath: /data/lighthouse/beacon
+    containerPath: /data/lighthouse/beacon
+  - hostPath: /data/lighthouse/validator-client-1
+    containerPath: /data/lighthouse/validator-client-1

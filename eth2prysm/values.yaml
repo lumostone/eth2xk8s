@@ -15,10 +15,10 @@ persistentVolumeType: "nfs"
 nfs:
   # IP address of the NFS server.
   serverIp: 172.20.10.10
-  # The user ID is used to run all processes in the container that accesses the NFS.
+  # The user ID will be used to run all processes in the container. The user should have the access to the mounted NFS volume.
   # All directories and files created with the processes are owned by this user.
   user: 1001
-  # The group ID is used to grant limited file access to the processes in the container.
+  # The group ID will be used to run all processes in the container. The group should have the access to the mounted NFS volume.
   # If this field is not set, the group ID of the processes will be 0, which means they will have root access.
   # See https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ for more info.
   #

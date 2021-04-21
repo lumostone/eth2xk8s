@@ -12,13 +12,13 @@ This example demonstrates how to run one validator client and one beacon node us
 1. Clone this repo.
 
     ```bash
-    git clone https://github.com/eth2xk8s/eth2xk8s.git
+    git clone https://github.com/lumostone/eth2xk8s.git
     ```
 
 2. Create the data folders for beacon node and validator on the host machine. For example:
 
     ```bash
-    mkdir -p /data/prysm/validator /data/prysm/beacon
+    mkdir -p /data/prysm/validator-client-1 /data/prysm/beacon
     ```
 
 3. Update the `extraMounts` in `cluster-config/kind-single-node.yaml` with the paths to the created data folders.

@@ -12,15 +12,15 @@ This example demonstrates how to run one validator client and one beacon node us
 1. Clone this repo.
 
     ```bash
-    git clone https://github.com/eth2xk8s/eth2xk8s.git
+    git clone https://github.com/lumostone/eth2xk8s.git
     ```
 
 2. Create and export the data folders for beacon node and validator with the correct ownership on NFS. For example:
 
     ```bash
-    mkdir -p /data/prysm/validator /data/prysm/beacon
+    mkdir -p /data/prysm/validator-client-1 /data/prysm/beacon
 
-    chown -R 2000:2000 /data/prysm 
+    chown -R 1001:2000 /data/prysm 
 
     # Edit /etc/exports and add the created folders.
     sudo nano /etc/exports

@@ -130,6 +130,6 @@ If you want to develop for this project or verify your configuration quickly wit
 
 6. Install the Helm chart `./eth2prysm`.
 
-## Testing with k8s manifests
+## Testing k8s manifests
 
-Please see [Testing with manifests and hostPath](https://github.com/eth2xk8s/eth2xk8s/blob/master/host-path/README.md) and [Testing with manifests and NFS](https://github.com/eth2xk8s/eth2xk8s/blob/master/nfs/README.md) for details.
+Please see [Testing manifests with Prysm and hostPath](https://github.com/eth2xk8s/eth2xk8s/blob/master/prysm/host-path/README.md) and [Testing manifests with Prysm and NFS](https://github.com/eth2xk8s/eth2xk8s/blob/master/prysm/nfs/README.md) for details.

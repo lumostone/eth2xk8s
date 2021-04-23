@@ -19,12 +19,13 @@ spec:
     spec:
       containers:
       - name: beacon
-        image: gcr.io/prysmaticlabs/prysm/beacon-chain:v1.3.4
+        image: gcr.io/prysmaticlabs/prysm/beacon-chain:v1.3.8
         args:
-        - --pyrmont 
+        - --prater 
         - --rpc-host=0.0.0.0
         - --http-web3provider=<goerli eth1 node>
-        - --datadir=/data/prysm/beacon 
+        - --datadir=/data/prysm/beacon
+        - --genesis-state=/data/prysm/beacon/prater-genesis.ssz
         - --accept-terms-of-use
         ports:
         - containerPort: 13000
@@ -35,7 +36,6 @@ spec:
           protocol: UDP
         - containerPort: 4000
           protocol: TCP
-          hostPort: 4000
         volumeMounts:
         - name: beacon-storage
           mountPath: /data/prysm/beacon

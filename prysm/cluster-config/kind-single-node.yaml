@@ -4,9 +4,9 @@ nodes:
 - role: control-plane
   # add a mount from /path/to/my/files on the host to /files on the node
   extraMounts:
-  - hostPath: /data/prysm/validator
-    containerPath: /data/prysm/validator
   - hostPath: /data/prysm/beacon
     containerPath: /data/prysm/beacon
-  - hostPath: /data/prysm/wallet
-    containerPath: /data/prysm/wallet
+  - hostPath: /data/prysm/validator-client-1
+    containerPath: /data/prysm/validator-client-1
+  - hostPath: /data/prysm/wallet-1
+    containerPath: /data/prysm/wallet-1

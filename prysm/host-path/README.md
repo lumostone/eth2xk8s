@@ -33,10 +33,10 @@ This example demonstrates how to run one validator client and one beacon node us
 
 ## Create and config the cluster
 
-1. Create a kind cluster with the `cluster-config/kind-single-node.yaml` configuration.
+1. Create a kind cluster with the `prysm/cluster-config/kind-single-node.yaml` configuration.
 
     ```bash
-    kind create cluster --config=cluster-config/kind-single-node.yaml 
+    kind create cluster --config=prysm/cluster-config/kind-single-node.yaml 
     ```
 
 2. Apply the manifests to create the namespace and RBAC resources.

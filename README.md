@@ -115,12 +115,12 @@ If you want to develop for this project or verify your configuration quickly wit
 
 2. Create data and wallet folders on the host machine and import validator accounts.
 
-3. Update the `extraMounts` in `cluster-config/kind-single-node.yaml` with the paths to the created data folders.
+3. Update the `extraMounts` in `prysm/cluster-config/kind-single-node.yaml` with the paths to the created data folders.
 
 4. Install kind and create a kind cluster.
 
    ```bash
-   kind create cluster --config=cluster-config/kind-single-node.yaml 
+   kind create cluster --config=prysm/cluster-config/kind-single-node.yaml 
    ```
 
 5. Change values in `./eth2prysm/values.yaml` to match your environment.

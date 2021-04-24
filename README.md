@@ -32,10 +32,10 @@ If the goal is to run Prysm on mainnet, we recommend to use
 1. Clone this repo.
 
     ```bash
-    git clone https://github.com/eth2xk8s/eth2xk8s.git
+    git clone https://github.com/lumostone/eth2xk8s.git
     ```
 
-2. Change values in `./eth2prysm/values.yaml`.
+2. Change values in `./prysm/helm/values.yaml`.
 
    We recommend checking each field in `values.yaml` to determine the desired configuration. Fields that need to be changed or verified before installing the chart are the following ones:
 
@@ -54,7 +54,7 @@ Replace `[release-name]` in the following command to the name you prefer.
 - Install the chart.
 
    ```bash
-   helm install [release-name] ./eth2prysm -nprysm --create-namespace
+   helm install [release-name] ./prysm/helm -nprysm --create-namespace
    ```
 
 - Check installed manifests.
@@ -66,7 +66,7 @@ Replace `[release-name]` in the following command to the name you prefer.
 - Upgrade a release.
 
    ```bash
-   helm upgrade [release-name] ./eth2prysm -nprysm
+   helm upgrade [release-name] ./prysm/helm -nprysm
    ```
 
 - Check release history.
@@ -123,13 +123,13 @@ If you want to develop for this project or verify your configuration quickly wit
    kind create cluster --config=prysm/cluster-config/kind-single-node.yaml 
    ```
 
-5. Change values in `./eth2prysm/values.yaml` to match your environment.
+5. Change values in `./prysm/helm/values.yaml` to match your environment.
 
    - Set **persistentVolumeType** to `hostPath`.
    - Follow the [values.yaml configuration section](#change-the-configurations-to-match-your-environment) for more details.
 
-6. Install the Helm chart `./eth2prysm`.
+6. Install the Helm chart `./prysm/helm`.
 
 ## Testing k8s manifests
 
-Please see [Testing manifests with Prysm and hostPath](https://github.com/eth2xk8s/eth2xk8s/blob/master/prysm/host-path/README.md) and [Testing manifests with Prysm and NFS](https://github.com/eth2xk8s/eth2xk8s/blob/master/prysm/nfs/README.md) for details.
+Please see [Testing manifests with Prysm and hostPath](https://github.com/lumostone/eth2xk8s/blob/master/prysm/host-path/README.md) and [Testing manifests with Prysm and NFS](https://github.com/lumostone/eth2xk8s/blob/master/prysm/nfs/README.md) for details.

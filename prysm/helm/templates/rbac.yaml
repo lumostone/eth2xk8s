@@ -8,7 +8,7 @@ metadata:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: validator
+  name: validator-client
   namespace: {{ .Values.namespace }}
 
 ---
@@ -21,7 +21,7 @@ rules:
   resources: ['podsecuritypolicies']
   verbs:     ['use']
 - apiGroups: [""]
-  resources: ["secrets", "configmaps"]
+  resources: ["secrets"]
   verbs: ["get", "watch", "list"]
 
 ---
@@ -39,5 +39,5 @@ subjects:
   name: beacon
   namespace: {{ .Values.namespace }}
 - kind: ServiceAccount
-  name: validator
+  name: validator-client
   namespace: {{ .Values.namespace }}

@@ -1,76 +1,76 @@
-{{- range $key, $validator := .Values.validators }}
+{{- range $key, $validatorClient := .Values.validatorClients }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ $validator.name }}
+  name: {{ $validatorClient.name }}
   namespace: {{ $.Values.namespace }}
   labels:
-    app: {{ $validator.name }}
+    app: {{ $validatorClient.name }}
 spec:
   selector:
     matchLabels:
-      app: {{ $validator.name }}
+      app: {{ $validatorClient.name }}
   replicas: 1
   strategy: 
     type: Recreate
   template:
     metadata:
       labels:
-        app: {{ $validator.name }}
+        app: {{ $validatorClient.name }}
       annotations:
-        checksum/config: {{ $validator.walletPassword | sha256sum }}
+        checksum/config: {{ $validatorClient.walletPassword | sha256sum }}
     spec:
       initContainers:
       - name: init-wait
         image: alpine:3.13.2
         command: ['sh', '-c', 'echo "Wait for {{ $.Values.validatorStartWaitTime }} second(s) for extra slashing protection!" && sleep {{ $.Values.validatorStartWaitTime }}']
       containers:
-      - name: {{ $validator.name }}
+      - name: {{ $validatorClient.name }}
         image: "{{ $.Values.image.validatorImage }}:{{ $.Values.image.version }}"
         args:
         {{- if $.Values.ethereumTestnet }}
         - --{{ $.Values.ethereumTestnet }}
         {{- end }}
         - --beacon-rpc-provider={{ $.Values.beacon.name }}-service.{{ $.Values.namespace }}.svc.cluster.local:4000
-        - --datadir=/data/prysm/validator 
-        - --wallet-dir=/data/prysm/wallet 
+        - --datadir=/data/prysm/validator-client
+        - --wallet-dir=/data/prysm/wallet
         - --wallet-password-file=/data/prysm/password/wallet_pass.txt
-        - --graffiti={{ $validator.graffiti | quote }} 
+        - --graffiti={{ $validatorClient.graffiti | quote }}
         - --accept-terms-of-use
         volumeMounts:
-        - name: validator-storage
-          mountPath: /data/prysm/validator 
+        - name: validator-client-storage
+          mountPath: /data/prysm/validator-client
           readOnly: false
         - name: wallet-storage
-          mountPath: /data/prysm/wallet 
+          mountPath: /data/prysm/wallet
           readOnly: false
         - name: wallet-password
           mountPath: /data/prysm/password
           readOnly: true
       volumes:
-      - name: validator-storage
+      - name: validator-client-storage
         {{- if eq $.Values.persistentVolumeType "nfs" }}
         nfs:
-          path: {{ $validator.dataVolumePath }}
+          path: {{ $validatorClient.dataVolumePath }}
           server: {{ $.Values.nfs.serverIp }}
           readOnly: false
         {{- else }}
         hostPath:
-          path: {{ $validator.dataVolumePath }}
+          path: {{ $validatorClient.dataVolumePath }}
         {{- end }}
       - name: wallet-storage
         {{- if eq $.Values.persistentVolumeType "nfs" }}
         nfs:
-          path: {{ $validator.walletVolumePath }}
+          path: {{ $validatorClient.walletVolumePath }}
           server: {{ $.Values.nfs.serverIp }}
           readOnly: false
         {{- else }}
         hostPath:
-          path: {{ $validator.walletVolumePath }}
+          path: {{ $validatorClient.walletVolumePath }}
         {{- end }}
       - name: wallet-password
         secret:
-          secretName: {{ $validator.walletPasswordSecretName }}
+          secretName: {{ $validatorClient.walletPasswordSecretName }}
           items:
           - key: password
             path: wallet_pass.txt
@@ -79,7 +79,7 @@ spec:
         runAsUser: {{ $.Values.nfs.user }}
         runAsGroup: {{ $.Values.nfs.group }}
       {{- end }}
-      serviceAccountName: validator
+      serviceAccountName: validator-client
       restartPolicy: Always
 
 ---

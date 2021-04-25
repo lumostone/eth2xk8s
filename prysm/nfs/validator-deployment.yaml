@@ -29,7 +29,7 @@ spec:
         - --beacon-rpc-provider=beacon-service.prysm.svc.cluster.local:4000
         - --datadir=/data/prysm/validator-client-1
         - --wallet-dir=/data/prysm/wallet-1
-        - --wallet-password-file=/data/prysm/password/password.txt
+        - --wallet-password-file=/data/prysm/password/wallet_pass.txt
         - --graffiti="eth2 x k8s"
         - --accept-terms-of-use
         volumeMounts:
@@ -58,7 +58,7 @@ spec:
           secretName: wallet-password-1
           items:
           - key: password
-            path: password.txt
+            path: wallet_pass.txt
       securityContext:
         runAsUser: 1001
         runAsGroup: 2000

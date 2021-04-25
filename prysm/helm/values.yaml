@@ -25,7 +25,7 @@ nfs:
   # All directories and files created with the processes are owned by this group.
   group: 2000
 
-# A required section that configures beacon chain and validator client images registry and version.
+# A required section that configures image registry, image name and version tag for beacon chain and validator client.
 # Prysm currently pushes images to:
 #   Google Cloud Container Registry: https://console.cloud.google.com/gcr/images/prysmaticlabs/GLOBAL/prysm
 #   Docker Hub: https://hub.docker.com/u/prysmaticlabs

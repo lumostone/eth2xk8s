@@ -43,9 +43,9 @@ If the goal is to run Prysm on mainnet, we recommend to use
    - **image.version**: Prysm client version.
    - **beacon.dataVolumePath**: The path to the data directory on the NFS for the beacon node.
    - **beacon.web3Provider** and **beacon.fallbackWeb3Providers**: Ethereum 1 node endpoints.
-   - **validators.validator1.dataVolumePath**: The path to the data directory on the NFS for the validator.
-   - **validators.validator1.walletVolumePath**: The path to the data directory on the NFS for the wallet.
-   - **validators.validator1.walletPassword**: The wallet password.
+   - **validatorClients.validatorClient1.dataVolumePath**: The path to the data directory on the NFS for the validator.
+   - **validatorClients.validatorClient1.walletVolumePath**: The path to the data directory on the NFS for the wallet.
+   - **validatorClients.validatorClient1.walletPassword**: The wallet password.
 
 ### Install, upgrade, roll back and uninstall Helm chart
 
@@ -98,7 +98,7 @@ Replace `[release-name]` in the following command to the name you prefer.
 - Check the status of the first validator (To check other validators, change -lapp to other validators' names).
 
    ```bash
-   kubectl logs -f -nprysm -lapp=validator1
+   kubectl logs -f -nprysm -lapp=validator-client-1
    ```
 
 ## For Development or Testing

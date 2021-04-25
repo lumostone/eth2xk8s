@@ -1,7 +1,7 @@
 # Default values for eth2-prysm.
 # This is a YAML-formatted file.
 
-# Kubernetes namespace for Prysm beacon chain and validator deployments, services, secrets, etc.
+# Kubernetes namespace for Prysm beacon chain and validator client deployments, services, secrets, etc.
 namespace: prysm
 
 # Specify which Ethereum 2.0 testnet to use. If the target network is mainnet, leave this field blank.
@@ -25,7 +25,7 @@ nfs:
   # All directories and files created with the processes are owned by this group.
   group: 2000
 
-# A required section that configures beacon chain and validator images registry and version.
+# A required section that configures beacon chain and validator client images registry and version.
 # Prysm currently pushes images to:
 #   Google Cloud Container Registry: https://console.cloud.google.com/gcr/images/prysmaticlabs/GLOBAL/prysm
 #   Docker Hub: https://hub.docker.com/u/prysmaticlabs
@@ -34,7 +34,7 @@ image:
   #   Google Cloud: gcr.io/prysmaticlabs/prysm/beacon-chain
   #   Docker Hub: index.docker.io/prysmaticlabs/prysm-beacon-chain
   beaconImage: gcr.io/prysmaticlabs/prysm/beacon-chain
-  # The image registry of validator:
+  # The image registry of validator client:
   #   Google Cloud: gcr.io/prysmaticlabs/prysm/validator
   #   Docker Hub: index.docker.io/prysmaticlabs/prysm-validator
   validatorImage: gcr.io/prysmaticlabs/prysm/validator 
@@ -65,8 +65,8 @@ beacon:
     - http://127.0.0.1:8546
     - http://127.0.0.1:8547
 
-# This field determines how long it will wait before the validator starts or restarts.
-# It's a way to protect the validator from double attesting or block proposing when the DB is out-of-date.
+# This field determines how long it will wait before the validator client starts or restarts.
+# It's a way to protect the validator client from double attesting or block proposing when the DB is out-of-date.
 validatorStartWaitTime: 780
 
 # A required section that contains information for all validator clients
@@ -74,7 +74,7 @@ validatorClients:
   # This section contains information for one validator client.
   # "validatorClient1" is the name of this validator client section. You can change it to other strings as long as it's different than other section names.
   validatorClient1:
-    # This field specifies the name and label for validator deployment, container and service.
+    # This field specifies the name and label for validator client deployment, container and service.
     name: validator-client-1
     # The volume path of validator client data. 
     # If persistentVolumeType is set to "nfs", this variable represents the data volume path on NFS.

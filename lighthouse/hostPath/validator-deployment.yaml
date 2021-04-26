@@ -39,5 +39,8 @@ spec:
       - name: validator-client-storage
         hostPath:
           path: /data/lighthouse/validator-client-1
+      securityContext:
+        runAsUser: 1001
+        runAsGroup: 2000
       serviceAccountName: validator-client
       restartPolicy: Always

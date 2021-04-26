@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nimbus
+  namespace: nimbus
+  labels:
+    app: nimbus
+spec:
+  selector:
+    matchLabels:
+      app: nimbus
+  replicas: 1
+  strategy: 
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: nimbus
+    spec:
+      initContainers:
+      - name: init-wait
+        image: alpine:3.13.2
+        command: ['sh', '-c', 'echo Wait for 780 seconds for extra slashing protection! && sleep 780']
+      containers:
+      - name: nimbus
+        image: index.docker.io/statusim/nimbus-eth2:amd64-v1.2.1
+        args:
+        - --network=prater
+        - --non-interactive
+        - --data-dir=/data/nimbus
+        - --validators-dir=/data/nimbus/validators
+        - --secrets-dir=/data/nimbus/secrets
+        - --web3-url<goerli eth1 node>
+        - --graffiti="eth2 x k8s"
+        - --log-level=INFO
+        ports:
+        - containerPort: 9000
+          hostPort: 9000
+          protocol: TCP
+        - containerPort: 9000
+          hostPort: 9000
+          protocol: UDP
+        volumeMounts:
+        - name: nimbus-storage
+          mountPath: /data/nimbus
+          readOnly: false
+      volumes:
+      - name: nimbus-storage
+        nfs:
+          path: /data/nimbus
+          server: 172.20.10.10
+          readOnly: false
+      securityContext:
+        runAsUser: 1001
+        runAsGroup: 2000
+      serviceAccountName: nimbus
+      restartPolicy: Always

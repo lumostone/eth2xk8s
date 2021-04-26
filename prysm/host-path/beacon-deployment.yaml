@@ -43,5 +43,8 @@ spec:
       - name: beacon-storage
         hostPath:
           path: /data/prysm/beacon
+      securityContext:
+        runAsUser: 1001
+        runAsGroup: 2000
       serviceAccountName: beacon
       restartPolicy: Always

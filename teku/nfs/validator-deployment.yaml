@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: validator-client-1
+  namespace: teku
+  labels:
+    app: validator-client-1
+spec:
+  selector:
+    matchLabels:
+      app: validator-client-1
+  replicas: 1
+  strategy: 
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: validator-client-1
+    spec:
+      initContainers:
+      - name: init-wait
+        image: alpine:3.13.2
+        command: ['sh', '-c', 'echo Wait for 780 seconds for extra slashing protection! && sleep 780']
+      containers:
+      - name: validator-client-1
+        image: index.docker.io/consensys/teku:21.4.1
+        args:
+        - vc 
+        - --network=prater
+        - --beacon-node-api-endpoint=http://beacon-service.teku.svc.cluster.local:5051
+        - --data-validator-path=/data/teku/validator-client-1
+        - --validator-keys=/data/teku/validator-client-1/validator_keys:/data/teku/validator-client-1/passwords
+        - --validators-graffiti="eth2 x k8s"
+        - --log-destination=CONSOLE
+        volumeMounts:
+        - name: validator-client-storage
+          mountPath: /data/teku/validator-client-1
+          readOnly: false
+      volumes:
+      - name: validator-client-storage
+        nfs:
+          path: /data/teku/validator-client-1
+          server: 172.20.10.10
+          readOnly: false
+      securityContext:
+        runAsUser: 1001
+        runAsGroup: 2000
+      serviceAccountName: validator-client
+      restartPolicy: Always

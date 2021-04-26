@@ -3,5 +3,5 @@ name: eth2-prysm
 description: A Helm chart for Ethereum 2 client - Prysm
 
 type: application
-version: 0.1.0
-appVersion: "1.3.8"
+version: 0.1.1
+appVersion: 1.3.8

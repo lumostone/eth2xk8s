@@ -1,0 +1,7 @@
+apiVersion: v2
+name: eth2-teku
+description: A Helm chart for Ethereum 2 client - Teku
+
+type: application
+version: 0.1.0
+appVersion: 21.4.1

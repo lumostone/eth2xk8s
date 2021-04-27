@@ -44,5 +44,8 @@ spec:
       - name: beacon-storage
         hostPath:
           path: /data/lighthouse/beacon
+      securityContext:
+        runAsUser: 1001
+        runAsGroup: 2000
       serviceAccountName: beacon
       restartPolicy: Always

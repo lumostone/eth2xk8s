@@ -17,7 +17,7 @@ This example demonstrates how to run one validator client and one beacon node us
 
 2. Create the data folders for beacon node and validator. For example:
 
-   ```bash
+    ```bash
     mkdir -p /data/prysm/validator-client-1 /data/prysm/wallet-1 /data/prysm/beacon
     ```
 
@@ -25,7 +25,7 @@ This example demonstrates how to run one validator client and one beacon node us
 
 4. Change the directory ownership:
    
-   ```bash
+    ```bash
     chown -R 1001:2000 /data/prysm
     ```
 

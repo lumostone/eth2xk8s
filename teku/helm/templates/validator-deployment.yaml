@@ -30,7 +30,7 @@ spec:
         {{- if $.Values.ethereumTestnet }}
         - --network={{ $.Values.ethereumTestnet }}
         {{- end }}
-        - --beacon-node-api-endpoint=http://{ $.Values.beacon.name }}-service.{{ $.Values.namespace }}.svc.cluster.local:5051
+        - --beacon-node-api-endpoint=http://{{ $.Values.beacon.name }}-service.{{ $.Values.namespace }}.svc.cluster.local:5051
         - --data-validator-path=/data/teku/validator-client
         - --validator-keys=/data/teku/validator-keys:/data/teku/validator-key-passwords
         - --validators-graffiti={{ $validatorClient.graffiti | quote }}

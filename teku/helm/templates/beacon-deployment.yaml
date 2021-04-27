@@ -27,7 +27,7 @@ spec:
         {{- end }}
         - --rest-api-enabled
         - --rest-api-host-allowlist={{ $.Values.beacon.name }}-service.{{ $.Values.namespace }}.svc.cluster.local
-        - --eth1-endpoint=
+        - --eth1-endpoint={{ .eth1Endpoint }}
         - --data-beacon-path=/data/teku/beacon
         - --log-destination=CONSOLE
         ports:

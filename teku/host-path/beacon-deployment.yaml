@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: beacon
-  namespace: lighthouse
+  namespace: teku
   labels:
     app: beacon
 spec:
@@ -19,15 +19,14 @@ spec:
     spec:
       containers:
       - name: beacon
-        image: index.docker.io/sigp/lighthouse:v1.3.0
+        image: index.docker.io/consensys/teku:21.4.1
         args:
-        - lighthouse
         - --network=prater
-        - bn
-        - --staking
-        - --http-address=0.0.0.0
-        - --eth1-endpoints=<goerli eth1 node>
-        - --datadir=/data/lighthouse/beacon
+        - --rest-api-enabled
+        - --rest-api-host-allowlist=beacon-service.teku.svc.cluster.local
+        - --eth1-endpoint=<goerli eth1 node>
+        - --data-beacon-path=/data/teku/beacon
+        - --log-destination=CONSOLE
         ports:
         - containerPort: 9000
           hostPort: 9000
@@ -35,15 +34,15 @@ spec:
         - containerPort: 9000
           hostPort: 9000
           protocol: UDP
-        - containerPort: 5052
+        - containerPort: 5051
           protocol: TCP
         volumeMounts:
         - name: beacon-storage
-          mountPath: /data/lighthouse/beacon
+          mountPath: /data/teku/beacon
       volumes:
       - name: beacon-storage
         hostPath:
-          path: /data/lighthouse/beacon
+          path: /data/teku/beacon
       securityContext:
         runAsUser: 1001
         runAsGroup: 2000

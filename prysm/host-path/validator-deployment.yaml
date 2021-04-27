@@ -55,5 +55,8 @@ spec:
           items:
           - key: password
             path: wallet_pwd.txt
+      securityContext:
+        runAsUser: 1001
+        runAsGroup: 2000
       serviceAccountName: validator-client
       restartPolicy: Always

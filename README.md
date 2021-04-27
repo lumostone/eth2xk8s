@@ -113,22 +113,34 @@ If you want to develop for this project or verify your configuration quickly wit
 
 1. Clone the repo.
 
-2. Create data and wallet folders on the host machine and import validator accounts.
+2. Create the data folders for beacon node and validator. For example:
 
-3. Update the `extraMounts` in `prysm/cluster-config/kind-single-node.yaml` with the paths to the created data folders.
+   ```bash
+   mkdir -p /data/prysm/validator-client-1 /data/prysm/wallet-1 /data/prysm/beacon
+   ```
 
-4. Install kind and create a kind cluster.
+3. Import validator accounts with the wallet directory created in the previous step.
+
+4. Change the directory ownership:
+   
+   ```bash
+   chown -R 1001:2000 /data/prysm
+   ```
+
+5. Update the `extraMounts` in `prysm/cluster-config/kind-single-node.yaml` with the paths to the created data directories.
+
+6. Install kind and create a kind cluster.
 
    ```bash
    kind create cluster --config=prysm/cluster-config/kind-single-node.yaml 
    ```
 
-5. Change values in `./prysm/helm/values.yaml` to match your environment.
+7. Change values in `prysm/helm/values.yaml` to match your environment.
 
    - Set **persistentVolumeType** to `hostPath`.
    - Follow the [values.yaml configuration section](#change-the-configurations-to-match-your-environment) for more details.
 
-6. Install the Helm chart `./prysm/helm`.
+8. Install the Helm chart `prysm/helm`.
 
 ## Testing k8s manifests
 

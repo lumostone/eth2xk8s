@@ -32,11 +32,11 @@ spec:
         {{- end }}
         - vc
         - --beacon-nodes=http://{{ $.Values.beacon.name }}-service.{{ $.Values.namespace }}.svc.cluster.local:5052
-        - --datadir=/data/lighthouse/validator-client
+        - --datadir={{ $validatorClient.dataVolumePath }}
         - --graffiti={{ $validatorClient.graffiti | quote }}
         volumeMounts:
         - name: validator-client-storage
-          mountPath: /data/lighthouse/validator-client
+          mountPath: {{ $validatorClient.dataVolumePath }}
           readOnly: false
       volumes:
       - name: validator-client-storage

@@ -1,0 +1,59 @@
+{{- range $key, $validatorClient := .Values.validatorClients }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $validatorClient.name }}
+  namespace: {{ $.Values.namespace }}
+  labels:
+    app: {{ $validatorClient.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ $validatorClient.name }}
+  replicas: 1
+  strategy: 
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ $validatorClient.name }}
+    spec:
+      initContainers:
+      - name: init-wait
+        image: alpine:3.13.2
+        command: ['sh', '-c', 'echo "Wait for {{ $.Values.validatorStartWaitTime }} second(s) for extra slashing protection!" && sleep {{ $.Values.validatorStartWaitTime }}']
+      containers:
+      - name: {{ $validatorClient.name }}
+        image: "{{ $.Values.image.validatorImage }}:{{ $.Values.image.version }}"
+        args:
+        - lighthouse
+        - --network=prater
+        - vc
+        - --beacon-nodes=http://{{ $.Values.beacon.name }}-service.{{ $.Values.namespace }}.svc.cluster.local:5052
+        - --datadir=/data/lighthouse/validator-client
+        - --graffiti={{ $validatorClient.graffiti | quote }}
+        volumeMounts:
+        - name: validator-client-storage
+          mountPath: /data/lighthouse/validator-client
+          readOnly: false
+      volumes:
+      - name: validator-client-storage
+        {{- if eq $.Values.persistentVolumeType "nfs" }}
+        nfs:
+          path: {{ $validatorClient.dataVolumePath }}
+          server: {{ $.Values.nfs.serverIp }}
+          readOnly: false
+        {{- else }}
+        hostPath:
+          path: {{ $validatorClient.dataVolumePath }}
+        {{- end }}
+      {{- if eq $.Values.persistentVolumeType "nfs" }}
+      securityContext:
+        runAsUser: {{ $.Values.nfs.user }}
+        runAsGroup: {{ $.Values.nfs.group }}
+      {{- end }}
+      serviceAccountName: validator-client
+      restartPolicy: Always
+
+---
+{{- end }}

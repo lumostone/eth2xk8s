@@ -1,0 +1,64 @@
+{{- with .Values.beacon }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}
+  namespace: {{ $.Values.namespace }}
+  labels:
+    app: {{ .name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .name }}
+  replicas: 1
+  strategy: 
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ .name }}
+    spec:
+      containers:
+      - name: {{ .name }}
+        image: "{{ $.Values.image.beaconImage }}:{{ $.Values.image.version }}"
+        args:
+        - lighthouse
+        {{- if $.Values.ethereumTestnet }}
+        - --network={{ $.Values.ethereumTestnet }}
+        {{- end }}
+        - bn
+        - --staking
+        - --http-address=0.0.0.0
+        - --eth1-endpoints={{ .eth1Endpoints | join "," }}
+        - --datadir=/data/lighthouse/beacon
+        ports:
+        - containerPort: 9000
+          hostPort: 9000
+          protocol: TCP
+        - containerPort: 9000
+          hostPort: 9000
+          protocol: UDP
+        - containerPort: 5052
+          protocol: TCP
+        volumeMounts:
+        - name: beacon-storage
+          mountPath: /data/lighthouse/beacon
+      volumes:
+      - name: beacon-storage
+        {{- if eq $.Values.persistentVolumeType "nfs" }}
+        nfs:
+          path: {{ .dataVolumePath }}
+          server: {{ $.Values.nfs.serverIp }}
+          readOnly: false
+        {{- else }}
+        hostPath:
+          path: {{ .dataVolumePath }}
+        {{- end }}
+      {{- if eq $.Values.persistentVolumeType "nfs" }}
+      securityContext:
+        runAsUser: {{ $.Values.nfs.user }}
+        runAsGroup: {{ $.Values.nfs.group }} 
+      {{- end }} 
+      serviceAccountName: beacon
+      restartPolicy: Always
+{{- end }}

@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: beacon
+  namespace: {{ .Values.namespace }}
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: validator-client
+  namespace: {{ .Values.namespace }}
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: lighthouse
+rules:
+- apiGroups: ['policy']
+  resources: ['podsecuritypolicies']
+  verbs:     ['use']
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: lighthouse-cluster-role-rolebinding
+roleRef:
+  kind: ClusterRole
+  name: lighthouse
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+# Authorize specific service accounts:
+- kind: ServiceAccount
+  name: beacon
+  namespace: {{ .Values.namespace }}
+- kind: ServiceAccount
+  name: validator-client
+  namespace: {{ .Values.namespace }}

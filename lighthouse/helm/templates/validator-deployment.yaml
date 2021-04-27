@@ -27,7 +27,9 @@ spec:
         image: "{{ $.Values.image.validatorImage }}:{{ $.Values.image.version }}"
         args:
         - lighthouse
-        - --network=prater
+        {{- if $.Values.ethereumTestnet }}
+        - --network={{ $.Values.ethereumTestnet }}
+        {{- end }}
         - vc
         - --beacon-nodes=http://{{ $.Values.beacon.name }}-service.{{ $.Values.namespace }}.svc.cluster.local:5052
         - --datadir=/data/lighthouse/validator-client
@@ -47,11 +49,9 @@ spec:
         hostPath:
           path: {{ $validatorClient.dataVolumePath }}
         {{- end }}
-      {{- if eq $.Values.persistentVolumeType "nfs" }}
       securityContext:
         runAsUser: {{ $.Values.nfs.user }}
         runAsGroup: {{ $.Values.nfs.group }}
-      {{- end }}
       serviceAccountName: validator-client
       restartPolicy: Always
 

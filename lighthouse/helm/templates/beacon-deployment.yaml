@@ -54,11 +54,9 @@ spec:
         hostPath:
           path: {{ .dataVolumePath }}
         {{- end }}
-      {{- if eq $.Values.persistentVolumeType "nfs" }}
       securityContext:
         runAsUser: {{ $.Values.nfs.user }}
         runAsGroup: {{ $.Values.nfs.group }} 
-      {{- end }} 
       serviceAccountName: beacon
       restartPolicy: Always
 {{- end }}

@@ -15,25 +15,27 @@ This example demonstrates how to run one validator client and one beacon node us
     git clone https://github.com/lumostone/eth2xk8s.git
     ```
 
-2. Create the data folders for beacon node and validator and change the ownership. For example:
+2. Create the data folders for beacon node and validator. For example:
 
-    ```bash
+   ```bash
     mkdir -p /data/prysm/validator-client-1 /data/prysm/wallet-1 /data/prysm/beacon
-
-    chown -R 1001:2000 /data/prysm
     ```
 
 3. Import validator accounts with the wallet directory created in the previous step.
 
-4. Update the `extraMounts` in `prysm/cluster-config/kind-single-node.yaml` with the paths to the created data folders.
+4. Change the directory ownership:
+   
+   ```bash
+    chown -R 1001:2000 /data/prysm
+    ```
+
+5. Update the `extraMounts` in `prysm/cluster-config/kind-single-node.yaml` with the paths to the created data folders.
 
 ## Prepare the manifests
 
-1. Create the validator wallet and import the validator account.
+1. Replace `example-password` with your wallet password in `wallet-secret.yaml`.
 
-2. Replace `example-password` with your wallet password in `wallet-secret.yaml`.
-
-3. Replace `<goerli eth1 node>` in `beacon-deployment.yaml` with your eth1 node endpoint.
+2. Replace `<goerli eth1 node>` in `beacon-deployment.yaml` with your eth1 node endpoint.
 
 ## Create and config the cluster
 

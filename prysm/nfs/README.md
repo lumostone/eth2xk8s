@@ -15,13 +15,23 @@ This example demonstrates how to run one validator client and one beacon node us
     git clone https://github.com/lumostone/eth2xk8s.git
     ```
 
-2. Create and export the data folders for beacon node and validator with the correct ownership on NFS. For example:
+2. Create the data folders for beacon node and validator on NFS. For example:
+
+   ```bash
+    mkdir -p /data/prysm/validator-client-1 /data/prysm/wallet-1 /data/prysm/beacon
+    ```
+
+3. Import validator accounts with the wallet directory created in the previous step.
+
+4. Change the directory ownership:
+   
+   ```bash
+    chown -R 1001:2000 /data/prysm
+    ```
+
+5. Export the data directories:
 
     ```bash
-    mkdir -p /data/prysm/validator-client-1 /data/prysm/beacon
-
-    chown -R 1001:2000 /data/prysm 
-
     # Edit /etc/exports and add the created folders.
     sudo nano /etc/exports
 
@@ -30,13 +40,11 @@ This example demonstrates how to run one validator client and one beacon node us
 
 ## Prepare the manifests
 
-1. Create the validator wallet and import the validator account.
+1. Replace `example-password` with your wallet password in `wallet-secret.yaml`.
 
-2. Replace `example-password` with your wallet password in `wallet-secret.yaml`.
+2. Replace `<goerli eth1 node>` in `beacon-deployment.yaml` with your eth1 node endpoint.
 
-3. Replace `<goerli eth1 node>` in `beacon-deployment.yaml` with your eth1 node endpoint.
-
-4. Change `volumes.nfs.server` in `beacon-deployment.yaml` and `validator-deployment.yaml` to the correct NFS server IP address.
+3. Change `volumes.nfs.server` in `beacon-deployment.yaml` and `validator-deployment.yaml` to the correct NFS server IP address.
 
 ## Config the cluster
 

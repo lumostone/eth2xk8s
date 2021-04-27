@@ -34,7 +34,7 @@ spec:
         - --beacon-rpc-provider={{ $.Values.beacon.name }}-service.{{ $.Values.namespace }}.svc.cluster.local:4000
         - --datadir=/data/prysm/validator-client
         - --wallet-dir=/data/prysm/wallet
-        - --wallet-password-file=/data/prysm/password/wallet_pwd.txt
+        - --wallet-password-file=/data/prysm/password/wallet-pwd.txt
         - --graffiti={{ $validatorClient.graffiti | quote }}
         - --accept-terms-of-use
         volumeMounts:
@@ -73,7 +73,7 @@ spec:
           secretName: {{ $validatorClient.walletPasswordSecretName }}
           items:
           - key: password
-            path: wallet_pwd.txt
+            path: wallet-pwd.txt
       securityContext:
         runAsUser: {{ $.Values.nfs.user }}
         runAsGroup: {{ $.Values.nfs.group }}

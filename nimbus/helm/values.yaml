@@ -1,0 +1,102 @@
+# Default values for eth2-nimbus.
+# This is a YAML-formatted file.
+
+# Kubernetes namespace for Nimbus client deployments.
+namespace: nimbus
+
+# Specify which Ethereum 2.0 testnet to use. If the target network is mainnet, leave this field blank.
+ethereumTestnet: prater
+
+# A required field that determines the persistent storage type. Default to hostPath.
+# Available options: nfs and hostPath.
+persistentVolumeType: "nfs"
+
+# NFS configurations. Only need to fill this section when persistentVolumeType is set to "nfs".
+nfs:
+  # IP address of the NFS server.
+  serverIp: 172.20.10.10
+  # The user ID will be used to run all processes in the container. The user should have the access to the mounted NFS volume.
+  # All directories and files created with the processes are owned by this user.
+  user: 1001
+  # The group ID will be used to run all processes in the container. The group should have the access to the mounted NFS volume.
+  # If this field is not set, the group ID of the processes will be 0, which means they will have root access.
+  # See https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ for more info.
+  #
+  # All directories and files created with the processes are owned by this group.
+  group: 2000
+
+# A required section that configures image registry, image name and version tag for Nimbus client.
+# Nimbus currently pushes images to:
+#   Docker Hub: https://hub.docker.com/r/statusim/nimbus-eth2
+image:
+  # The image name of the Nimbus client:
+  #   Docker Hub: index.docker.io/statusim/nimbus-eth2
+  nimbusImage: index.docker.io/statusim/nimbus-eth2
+  # Nimbus release version. 
+  # Check https://github.com/status-im/nimbus-eth2/releases for release info. 
+  versionTag: amd64-v1.2.1
+
+# A required section that contains Nimbus client information.
+nimbus:
+  
+  # This field determines how long it will wait before the validator client starts or restarts.
+  # It's a way to protect the validator client from double attesting or block proposing when the DB is out-of-date.
+  validatorStartWaitTime: 780
+  # A required section that contains information for all Nimbus clients
+  clients:
+    # This section contains information for one Nimbus client.
+    # "nimbusClient1" is the name of this Nimbus client section. You can change it to other strings as long as it's different than other section names.
+    client1:
+      # This field specifies the name and label for Nimbus client deployment and container.
+      name: nimbus-1
+      # The volume path of the directory where Nimbus will store all blockchain data.
+      # If persistentVolumeType is set to "nfs", this variable represents the data volume path on NFS.
+      # If the type is set to "hostPath", it represents the volume path on the host node.
+      # Main Ethereum 1 node endpoint.
+      web3Provider: http://127.0.0.1:8545
+      # UDP Port opened for P2P connection with the beacon node.
+      # See https://nimbus.guide/options.html for more info.
+      p2pUdpPort: 9000
+      # TCP Port opened for P2P connection with the beacon node.
+      # See https://nimbus.guide/options.html for more info.
+      p2pTcpPort: 9000
+      dataVolumePath: /data/nimbus/beacon-1
+      # The volume path of validator keystores. 
+      # If persistentVolumeType is set to "nfs", this variable represents the data volume path on NFS.
+      # If the type is set to "hostPath", it represents the volume path on the host node.
+      # It's recommended to have different value for each validator client to avoid using the wrong validator client data.
+      validatorsVolumePath: /data/nimbus/validator-client-1
+      # The volume path of the validator keystores passwords. 
+      # It's recommended to have different value for each validator client to avoid using the wrong wallet.
+      secretsVolumePath: /data/nimbus/secret-1
+      # The volume path of the wallet. 
+      # It's recommended to have different value for each validator client to avoid using the wrong wallet.
+      walletsVolumePath: /data/nimbus/wallet-1
+      # A mark you want to leave each time the validator client proposes a block.
+      # It can be a message or a pixel (on the graffiti wall).
+      # See https://beaconcha.in/charts/graffiti_wordcloud for example.
+      graffiti: "eth2 x k8s"
+    client2:
+      # This field specifies the name and label for Nimbus client deployment and container.
+      name: nimbus-2
+      web3Provider: http://127.0.0.1:8545
+      p2pUdpPort: 9000
+      p2pTcpPort: 9000
+      dataVolumePath: /data/nimbus/beacon-1
+      validatorsVolumePath: /data/nimbus/validator-client-1
+      secretsVolumePath: /data/nimbus/secret-1
+      walletsVolumePath: /data/nimbus/wallet-1
+      graffiti: "eth2 x k8s"
+    
+  # You can add more nimbus clients below. The name of a new Nimbus client section can be client3 or anything else that you prefer
+  # as long as the section has the same indentation as other Nimbus client sections and contains all the fields under the section name.
+  # client3:
+  #   name:
+  #   web3Provider
+  #   p2pUdpPort
+  #   p2pTcpPort
+  #   dataVolumePath: 
+  #   validatorsVolumePath:
+  #   secretsVolumePath:
+  #   walletsVolumePath: 
+  #   graffiti:

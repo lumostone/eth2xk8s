@@ -41,7 +41,7 @@ spec:
           readOnly: false
         - name: validator-key-passwords-storage
           mountPath: /data/teku/validator-key-passwords
-          readOnly: false
+          readOnly: true
       volumes:
       - name: validator-client-storage
         hostPath:

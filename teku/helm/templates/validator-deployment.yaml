@@ -44,7 +44,7 @@ spec:
           readOnly: false
         - name: validator-key-passwords-storage
           mountPath: /data/teku/validator-key-passwords
-          readOnly: false
+          readOnly: true
       volumes:
       - name: validator-client-storage
         {{- if eq $.Values.persistentVolumeType "nfs" }}
@@ -71,7 +71,7 @@ spec:
         nfs:
           path: {{ $validatorClient.validatorKeyPasswordsVolumePath }}
           server: {{ $.Values.nfs.serverIp }}
-          readOnly: false
+          readOnly: true
         {{- else }}
         hostPath:
           path: {{ $validatorClient.validatorKeyPasswordsVolumePath }}

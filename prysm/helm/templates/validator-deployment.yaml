@@ -74,11 +74,9 @@ spec:
           items:
           - key: password
             path: wallet_pwd.txt
-      {{- if eq $.Values.persistentVolumeType "nfs" }}
       securityContext:
         runAsUser: {{ $.Values.nfs.user }}
         runAsGroup: {{ $.Values.nfs.group }}
-      {{- end }}
       serviceAccountName: validator-client
       restartPolicy: Always
 

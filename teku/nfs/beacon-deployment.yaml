@@ -24,7 +24,7 @@ spec:
         - --network=prater
         - --rest-api-enabled
         - --rest-api-host-allowlist=beacon-service.teku.svc.cluster.local
-        - --eth1-endpoint==<goerli eth1 node>
+        - --eth1-endpoint=<goerli eth1 node>
         - --data-beacon-path=/data/teku/beacon
         - --log-destination=CONSOLE
         ports:

@@ -28,18 +28,34 @@ spec:
         - vc 
         - --network=prater
         - --beacon-node-api-endpoint=http://beacon-service.teku.svc.cluster.local:5051
-        - --data-validator-path=/data/teku/validator-client-1
-        - --validator-keys=/data/teku/validator-client-1/validator_keys:/data/teku/validator-client-1/passwords
+        - --data-validator-path=/data/teku/validator-client
+        - --validator-keys=/data/teku/validator-keys:/data/teku/validator-key-passwords
         - --validators-graffiti="eth2 x k8s"
         - --log-destination=CONSOLE
         volumeMounts:
         - name: validator-client-storage
-          mountPath: /data/teku/validator-client-1
+          mountPath: /data/teku/validator-client
+          readOnly: false
+        - name: validator-keys-storage
+          mountPath: /data/teku/validator-keys
+          readOnly: false
+        - name: validator-key-passwords-storage
+          mountPath: /data/teku/validator-key-passwords
           readOnly: false
       volumes:
       - name: validator-client-storage
         nfs:
           path: /data/teku/validator-client-1
+          server: 172.20.10.10
+          readOnly: false
+      - name: validator-keys-storage
+        nfs:
+          path: /data/teku/validator-keys-1
+          server: 172.20.10.10
+          readOnly: false
+      - name: validator-key-passwords-storage
+        nfs:
+          path: /data/teku/validator-key-passwords-1
           server: 172.20.10.10
           readOnly: false
       securityContext:

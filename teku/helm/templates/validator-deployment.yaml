@@ -1,0 +1,86 @@
+{{- range $key, $validatorClient := .Values.validatorClients }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $validatorClient.name }}
+  namespace: {{ $.Values.namespace }}
+  labels:
+    app: {{ $validatorClient.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ $validatorClient.name }}
+  replicas: 1
+  strategy: 
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ $validatorClient.name }}
+    spec:
+      initContainers:
+      - name: init-wait
+        image: alpine:3.13.2
+        command: ['sh', '-c', 'echo "Wait for {{ $.Values.validatorStartWaitTime }} second(s) for extra slashing protection!" && sleep {{ $.Values.validatorStartWaitTime }}']
+      containers:
+      - name: {{ $validatorClient.name }}
+        image: "{{ $.Values.image.validatorImage }}:{{ $.Values.image.version }}"
+        args:
+        - vc 
+        {{- if $.Values.ethereumTestnet }}
+        - --network={{ $.Values.ethereumTestnet }}
+        {{- end }}
+        - --beacon-node-api-endpoint=http://{{ $.Values.beacon.name }}-service.{{ $.Values.namespace }}.svc.cluster.local:5051
+        - --data-validator-path=/data/teku/validator-client
+        - --validator-keys=/data/teku/validator-keys:/data/teku/validator-key-passwords
+        - --validators-graffiti={{ $validatorClient.graffiti | quote }}
+        - --log-destination=CONSOLE
+        volumeMounts:
+        - name: validator-client-storage
+          mountPath: /data/teku/validator-client
+          readOnly: false
+        - name: validator-keys-storage
+          mountPath: /data/teku/validator-keys
+          readOnly: false
+        - name: validator-key-passwords-storage
+          mountPath: /data/teku/validator-key-passwords
+          readOnly: false
+      volumes:
+      - name: validator-client-storage
+        {{- if eq $.Values.persistentVolumeType "nfs" }}
+        nfs:
+          path: {{ $validatorClient.dataVolumePath }}
+          server: {{ $.Values.nfs.serverIp }}
+          readOnly: false
+        {{- else }}
+        hostPath:
+          path: {{ $validatorClient.dataVolumePath }}
+        {{- end }}
+      - name: validator-keys-storage
+        {{- if eq $.Values.persistentVolumeType "nfs" }}
+        nfs:
+          path: {{ $validatorClient.validatorKeysVolumePath }}
+          server: {{ $.Values.nfs.serverIp }}
+          readOnly: false
+        {{- else }}
+        hostPath:
+          path: {{ $validatorClient.validatorKeysVolumePath }}
+        {{- end }}
+      - name: validator-key-passwords-storage
+        {{- if eq $.Values.persistentVolumeType "nfs" }}
+        nfs:
+          path: {{ $validatorClient.validatorKeyPasswordsVolumePath }}
+          server: {{ $.Values.nfs.serverIp }}
+          readOnly: false
+        {{- else }}
+        hostPath:
+          path: {{ $validatorClient.validatorKeyPasswordsVolumePath }}
+        {{- end }}
+      securityContext:
+        runAsUser: 1001
+        runAsGroup: 2000
+      serviceAccountName: validator-client
+      restartPolicy: Always
+
+---
+{{- end }}

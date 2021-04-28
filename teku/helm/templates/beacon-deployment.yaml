@@ -1,0 +1,61 @@
+{{- with .Values.beacon }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}
+  namespace: {{ $.Values.namespace }}
+  labels:
+    app: {{ .name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .name }}
+  replicas: 1
+  strategy: 
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ .name }}
+    spec:
+      containers:
+      - name: {{ .name }}
+        image: "{{ $.Values.image.beaconImage }}:{{ $.Values.image.version }}"
+        args:
+        {{- if $.Values.ethereumTestnet }}
+        - --network={{ $.Values.ethereumTestnet }}
+        {{- end }}
+        - --rest-api-enabled
+        - --rest-api-host-allowlist={{ $.Values.beacon.name }}-service.{{ $.Values.namespace }}.svc.cluster.local
+        - --eth1-endpoint={{ .eth1Endpoint }}
+        - --data-beacon-path=/data/teku/beacon
+        - --log-destination=CONSOLE
+        ports:
+        - containerPort: 9000
+          hostPort: 9000
+          protocol: TCP
+        - containerPort: 9000
+          hostPort: 9000
+          protocol: UDP
+        - containerPort: 5051
+          protocol: TCP
+        volumeMounts:
+        - name: beacon-storage
+          mountPath: /data/teku/beacon
+      volumes:
+      - name: beacon-storage
+        {{- if eq $.Values.persistentVolumeType "nfs" }}
+        nfs:
+          path: {{ .dataVolumePath }}
+          server: {{ $.Values.nfs.serverIp }}
+          readOnly: false
+        {{- else }}
+        hostPath:
+          path: {{ .dataVolumePath }}
+        {{- end }}
+      securityContext:
+        runAsUser: {{ $.Values.nfs.user }}
+        runAsGroup: {{ $.Values.nfs.group }} 
+      serviceAccountName: beacon
+      restartPolicy: Always
+{{- end }}

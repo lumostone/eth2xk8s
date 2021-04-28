@@ -8,3 +8,7 @@ nodes:
     containerPath: /data/teku/beacon
   - hostPath: /data/teku/validator-client-1
     containerPath: /data/teku/validator-client-1
+  - hostPath: /data/teku/validator-keys-1
+    containerPath: /data/teku/validator-keys-1
+  - hostPath: /data/teku/validator-key-passwords-1
+    containerPath: /data/teku/validator-key-passwords-1

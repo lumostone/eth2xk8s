@@ -1,0 +1,86 @@
+# Default values for eth2-lighthouse.
+# This is a YAML-formatted file.
+
+# Kubernetes namespace for lighthouse beacon chain and validator client deployments, services, secrets, etc.
+namespace: lighthouse
+
+# Specify which Ethereum 2.0 testnet to use. If the target network is mainnet, leave this field blank.
+ethereumTestnet: prater
+
+# A required field that determines the persistent storage type. Default to hostPath.
+# Available options: nfs and hostPath.
+persistentVolumeType: "nfs"
+
+# NFS configurations. Only need to fill this section when persistentVolumeType is set to "nfs".
+nfs:
+  # IP address of the NFS server.
+  serverIp: 172.20.10.10
+  # The user ID will be used to run all processes in the container. The user should have the access to the mounted NFS volume.
+  # All directories and files created with the processes are owned by this user.
+  user: 1001
+  # The group ID will be used to run all processes in the container. The group should have the access to the mounted NFS volume.
+  # If this field is not set, the group ID of the processes will be 0, which means they will have root access.
+  # See https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ for more info.
+  #
+  # All directories and files created with the processes are owned by this group.
+  group: 2000
+
+# A required section that configures image registry, image name and version tag for beacon chain and validator client.
+# Lighthouse currently pushes images to:
+#   Docker Hub: https://hub.docker.com/r/sigp/lighthouse
+image:
+  # The image registry of beacon chain:
+  #   Docker Hub: index.docker.io/sigp/lighthouse
+  beaconImage: index.docker.io/sigp/lighthouse
+  # The image registry of validator:
+  #   Docker Hub: index.docker.io/sigp/lighthouse
+  validatorImage: index.docker.io/sigp/lighthouse
+  # Lighthouse release version. 
+  # Check https://github.com/sigp/lighthouse/releases for more info. 
+  version: v1.3.0
+
+# A required section that contains beacon chain information.
+beacon:
+  # This field specifies the name and label for beacon chain deployment, container and service.
+  name: beacon
+  # The volume path of beacon chain data. 
+  # If persistentVolumeType is set to "nfs", this variable represents the data volume path on NFS.
+  # If the type is set to "hostPath", it represents the volume path on the host node.
+  dataVolumePath: /data/lighthouse/beacon
+  # Ethereum 1 node endpoints.
+  eth1Endpoints: 
+    - http://127.0.0.1:8545
+    - http://127.0.0.1:8546
+    
+# This field determines how long it will wait before the validator client starts or restarts.
+# It's a way to protect the validator client from double attesting or block proposing when the DB is out-of-date.
+validatorStartWaitTime: 780
+
+# A required section that contains information for all validator clients
+validatorClients:
+  # This section contains information for one validator client.
+  # "validatorClient1" is the name of this validator client section. You can change it to other strings as long as it's different than other section names.
+  validatorClient1:
+    # This field specifies the name and label for validator client deployment, container and service.
+    name: validator-client-1
+    # The volume path of validator client data. 
+    # If persistentVolumeType is set to "nfs", this variable represents the data volume path on NFS.
+    # If the type is set to "hostPath", it represents the volume path on the host node.
+    # It's recommended to have different value for each validator client to avoid using the wrong validator client data.
+    dataVolumePath: /data/lighthouse/validator-client-1  
+    # A mark you want to leave each time the validator client proposes a block.
+    # It can be a message or a pixel (on the graffiti wall).
+    # See https://beaconcha.in/charts/graffiti_wordcloud for example.
+    graffiti: "eth2 x k8s"
+    
+  validatorClient2:
+    name: validator-client-2
+    dataVolumePath: /data/lighthouse/validator-client-2
+    graffiti: "eth2 x k8s"
+  
+  # You can add more validator clients below. The name of a new validator client section can be validatorClient3 or anything else that you prefer
+  # as long as the section has the same indentation as other validator client sections and contains all the fields under the section name.
+  # validatorClient3:
+  #   name: 
+  #   dataVolumePath: 
+  #   graffiti: 

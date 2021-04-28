@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.beacon.name }}-service
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: {{ .Values.beacon.name }}
+  ports:
+    - protocol: TCP
+      port: 5052
+      targetPort: 5052

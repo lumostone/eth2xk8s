@@ -8,4 +8,3 @@ nodes:
     containerPath: /data/lighthouse/beacon
   - hostPath: /data/lighthouse/validator-client-1
     containerPath: /data/lighthouse/validator-client-1
- 

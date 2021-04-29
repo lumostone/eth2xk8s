@@ -2,26 +2,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ $validatorClient.name }}
+  name: {{ $nimbusClient.name }}
   namespace: nimbus
   labels:
-    app: {{ $validatorClient.name }}
+    app: {{ $nimbusClient.name }}
 spec:
   selector:
     matchLabels:
-      app: {{ $validatorClient.name }}
+      app: {{ $nimbusClient.name }}
   replicas: 1
   strategy: 
     type: Recreate
   template:
     metadata:
       labels:
-        app: {{ $validatorClient.name }}
+        app: {{ $nimbusClient.name }}
     spec:
       initContainers:
       - name: init-wait
         image: alpine:3.13.2
-        command: ['sh', '-c', 'echo Wait for {{ $.Values.validatorStartWaitTime }} seconds for extra slashing protection! && sleep {{ $.Values.validatorStartWaitTime }}']
+        command: ['sh', '-c', 'echo Wait for {{ $.Values.nimbus.startWaitTime }} seconds for extra slashing protection! && sleep {{ $.Values.nimbus.startWaitTime }}']
       containers:
       - name: nimbus
         image: "{{ $.Values.image.nimbusImage }}:{{ $.Values.image.versionTag }}"
@@ -30,22 +30,22 @@ spec:
         - --network={{ $.Values.ethereumTestnet }}
         {{- end }}
         - --non-interactive
-        - --tcp-port={{ $validatorClient.p2pTcpPort }}
-        - --udp-port={{ $validatorClient.p2pUdpPort }}
+        - --tcp-port={{ $nimbusClient.p2pTcpPort }}
+        - --udp-port={{ $nimbusClient.p2pUdpPort }}
         - --data-dir=/data/nimbus/beacon
         - --validators-dir=/data/nimbus/validators
         - --secrets-dir=/data/nimbus/secrets
-        - --web3-url={{ $validatorClient.web3Provider }}
+        - --web3-url={{ $nimbusClient.web3Provider }}
         {{- range .fallbackWeb3Providers }}
         - --web3-url={{ . }}
         {{- end }}
-        - --graffiti={{ $validatorClient.graffiti | quote }}
+        - --graffiti={{ $nimbusClient.graffiti | quote }}
         ports:
-        - containerPort: {{ $validatorClients.p2pTcpPort }}
-          hostPort: {{ $validatorClient.p2pTcpPort }}
+        - containerPort: {{ $nimbusClient.p2pTcpPort }}
+          hostPort: {{ $nimbusClient.p2pTcpPort }}
           protocol: TCP
-        - containerPort: {{ $validatorClient.p2pUdpPort }}
-          hostPort: {{ $validatorClient.p2pUdpPort }}
+        - containerPort: {{ $nimbusClient.p2pUdpPort }}
+          hostPort: {{ $nimbusClient.p2pUdpPort }}
           protocol: UDP
         volumeMounts:
         - name: nimbus-beacon-storage
@@ -61,29 +61,29 @@ spec:
       {{- if eq $.Values.persistentVolumeType "nfs" }}
       - name: nimbus-beacon-storage
         nfs:
-          path: {{ $validatorClient.dataVolumePath }}
+          path: {{ $nimbusClient.dataVolumePath }}
           server: {{ $.Values.nfs.serverIp }}
           readOnly: false
       - name: nimbus-validators-storage
         nfs:
-          path: {{ $validatorClient.validatorsVolumePath }}
+          path: {{ $nimbusClient.validatorsVolumePath }}
           server: {{ $.Values.nfs.serverIp }}
           readOnly: false
       - name: nimbus-secrets-storage
         nfs:
-          path: {{ $validatorClient.secretsVolumePath }}
+          path: {{ $nimbusClient.secretsVolumePath }}
           server: {{ $.Values.nfs.serverIp }}
           readOnly: true
       {{- else }}
       - name: nimbus-beacon-storage
         hostPath:
-          path: {{ $validatorClient.dataVolumePath }}
+          path: {{ $nimbusClient.dataVolumePath }}
       - name: nimbus-validator-storage
         hostPath:
-          path: {{ $validatorClient.validatorsVolumePath }}
+          path: {{ $nimbusClient.validatorsVolumePath }}
       - name: nimbus-secret-storage
         hostPath:
-          path: {{ $validatorClient.secretsVolumePath }}
+          path: {{ $nimbusClient.secretsVolumePath }}
       {{- end }}
       securityContext:
         runAsUser: {{ $.Values.nfs.user }}

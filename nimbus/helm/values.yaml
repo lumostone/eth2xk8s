@@ -40,7 +40,7 @@ image:
 nimbus:
   # This field determines how long it will wait before the validator client starts or restarts.
   # It's a way to protect the validator client from double attesting or block proposing when the DB is out-of-date.
-  validatorStartWaitTime: 780
+  startWaitTime: 780
   # A required section that contains information for all Nimbus clients
   clients:
     # This section contains information for one Nimbus client.
@@ -69,10 +69,10 @@ nimbus:
       # If persistentVolumeType is set to "nfs", this variable represents the data volume path on NFS.
       # If the type is set to "hostPath", it represents the volume path on the host node.
       # It's recommended to have different value for each validator client to avoid using the wrong validator client data.
-      validatorsVolumePath: /data/nimbus/validator-client-1
+      validatorsVolumePath: /data/nimbus/validators-1
       # The volume path of the validator keystores passwords. 
       # It's recommended to have different value for each validator client to avoid using the wrong wallet.
-      secretsVolumePath: /data/nimbus/secret-1
+      secretsVolumePath: /data/nimbus/secrets-1
       # A mark you want to leave each time the validator client proposes a block.
       # It can be a message or a pixel (on the graffiti wall).
       # See https://beaconcha.in/charts/graffiti_wordcloud for example.
@@ -82,11 +82,11 @@ nimbus:
       name: nimbus-2
       web3Provider: http://127.0.0.1:8545
       fallbackWeb3Providers:
-      p2pUdpPort: 9000
-      p2pTcpPort: 9000
-      dataVolumePath: /data/nimbus/beacon-1
-      validatorsVolumePath: /data/nimbus/validator-client-1
-      secretsVolumePath: /data/nimbus/secret-1
+      p2pUdpPort: 8000
+      p2pTcpPort: 8000
+      dataVolumePath: /data/nimbus/beacon-2
+      validatorsVolumePath: /data/nimbus/validators-2
+      secretsVolumePath: /data/nimbus/secrets-2
       graffiti: "eth2 x k8s"
     
   # You can add more nimbus clients below. The name of a new Nimbus client section can be client3 or anything else that you prefer

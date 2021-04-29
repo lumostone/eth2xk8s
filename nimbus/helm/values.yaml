@@ -38,7 +38,6 @@ image:
 
 # A required section that contains Nimbus client information.
 nimbus:
-  
   # This field determines how long it will wait before the validator client starts or restarts.
   # It's a way to protect the validator client from double attesting or block proposing when the DB is out-of-date.
   validatorStartWaitTime: 780
@@ -54,6 +53,11 @@ nimbus:
       # If the type is set to "hostPath", it represents the volume path on the host node.
       # Main Ethereum 1 node endpoint.
       web3Provider: http://127.0.0.1:8545
+      # A list of Ethereum 1 node fallback endpoints. 
+      # When the main endpoint isn't available, Nimbus will use these fallback endpoints instead until the main endpoint becomes available again.
+      fallbackWeb3Providers:
+        - http://127.0.0.1:8546
+        - http://127.0.0.1:8547
       # UDP Port opened for P2P connection with the beacon node.
       # See https://nimbus.guide/options.html for more info.
       p2pUdpPort: 9000
@@ -77,6 +81,7 @@ nimbus:
       # This field specifies the name and label for Nimbus client deployment and container.
       name: nimbus-2
       web3Provider: http://127.0.0.1:8545
+      fallbackWeb3Providers:
       p2pUdpPort: 9000
       p2pTcpPort: 9000
       dataVolumePath: /data/nimbus/beacon-1
@@ -88,9 +93,10 @@ nimbus:
   # as long as the section has the same indentation as other Nimbus client sections and contains all the fields under the section name.
   # client3:
   #   name:
-  #   web3Provider
-  #   p2pUdpPort
-  #   p2pTcpPort
+  #   web3Provider:
+  #   fallbackWeb3Providers:
+  #   p2pUdpPort:
+  #   p2pTcpPort:
   #   dataVolumePath: 
   #   validatorsVolumePath:
   #   secretsVolumePath:

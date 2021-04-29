@@ -36,6 +36,9 @@ spec:
         - --validators-dir=/data/nimbus/validators
         - --secrets-dir=/data/nimbus/secrets
         - --web3-url={{ $validatorClient.web3Provider }}
+        {{- range .fallbackWeb3Providers }}
+        - --web3-url={{ . }}
+        {{- end }}
         - --graffiti={{ $validatorClient.graffiti | quote }}
         ports:
         - containerPort: {{ $validatorClients.p2pTcpPort }}

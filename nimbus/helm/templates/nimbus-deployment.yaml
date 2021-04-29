@@ -35,7 +35,6 @@ spec:
         - --data-dir=/data/nimbus/beacon
         - --validators-dir=/data/nimbus/validators
         - --secrets-dir=/data/nimbus/secrets
-        - --wallets-dir=/data/nimbus/wallets
         - --web3-url={{ $validatorClient.web3Provider }}
         - --graffiti={{ $validatorClient.graffiti | quote }}
         ports:
@@ -54,10 +53,7 @@ spec:
           readOnly: false
         - name: nimbus-secrets-storage
           mountPath: /data/nimbus/secrets
-          readOnly: false
-        - name: nimbus-wallets-storage
-          mountPath: /data/nimbus/wallets
-          readOnly: false
+          readOnly: true
       volumes:
       {{- if eq $.Values.persistentVolumeType "nfs" }}
       - name: nimbus-beacon-storage
@@ -74,12 +70,7 @@ spec:
         nfs:
           path: {{ $validatorClient.secretsVolumePath }}
           server: {{ $.Values.nfs.serverIp }}
-          readOnly: false
-      - name: nimbus-wallets-storage
-        nfs:
-          path: {{ $validatorClient.walletsVolumePath }}
-          server: {{ $.Values.nfs.serverIp }}
-          readOnly: false
+          readOnly: true
       {{- else }}
       - name: nimbus-beacon-storage
         hostPath:
@@ -90,9 +81,6 @@ spec:
       - name: nimbus-secret-storage
         hostPath:
           path: {{ $validatorClient.secretsVolumePath }}
-      - name: nimbus-wallet-storage
-        hostPath:
-          path: {{ $validatorClient.walletsVolumePath }}
       {{- end }}
       securityContext:
         runAsUser: {{ $.Values.nfs.user }}

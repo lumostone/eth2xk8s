@@ -69,9 +69,6 @@ nimbus:
       # The volume path of the validator keystores passwords. 
       # It's recommended to have different value for each validator client to avoid using the wrong wallet.
       secretsVolumePath: /data/nimbus/secret-1
-      # The volume path of the wallet. 
-      # It's recommended to have different value for each validator client to avoid using the wrong wallet.
-      walletsVolumePath: /data/nimbus/wallet-1
       # A mark you want to leave each time the validator client proposes a block.
       # It can be a message or a pixel (on the graffiti wall).
       # See https://beaconcha.in/charts/graffiti_wordcloud for example.
@@ -85,7 +82,6 @@ nimbus:
       dataVolumePath: /data/nimbus/beacon-1
       validatorsVolumePath: /data/nimbus/validator-client-1
       secretsVolumePath: /data/nimbus/secret-1
-      walletsVolumePath: /data/nimbus/wallet-1
       graffiti: "eth2 x k8s"
     
   # You can add more nimbus clients below. The name of a new Nimbus client section can be client3 or anything else that you prefer
@@ -98,5 +94,4 @@ nimbus:
   #   dataVolumePath: 
   #   validatorsVolumePath:
   #   secretsVolumePath:
-  #   walletsVolumePath: 
   #   graffiti:

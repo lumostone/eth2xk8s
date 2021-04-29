@@ -38,7 +38,7 @@ image:
 
 # A required section that contains Nimbus client information.
 nimbus:
-  # This field determines how long it will wait before the validator client starts or restarts.
+  # This field determines how long it will wait before the Nimbus client starts or restarts.
   # It's a way to protect the validator client from double attesting or block proposing when the DB is out-of-date.
   startWaitTime: 780
   # A required section that contains information for all Nimbus clients
@@ -48,9 +48,6 @@ nimbus:
     client1:
       # This field specifies the name and label for Nimbus client deployment and container.
       name: nimbus-1
-      # The volume path of the directory where Nimbus will store all blockchain data.
-      # If persistentVolumeType is set to "nfs", this variable represents the data volume path on NFS.
-      # If the type is set to "hostPath", it represents the volume path on the host node.
       # Main Ethereum 1 node endpoint.
       web3Provider: http://127.0.0.1:8545
       # A list of Ethereum 1 node fallback endpoints. 
@@ -64,16 +61,17 @@ nimbus:
       # TCP Port opened for P2P connection with the beacon node.
       # See https://nimbus.guide/options.html for more info.
       p2pTcpPort: 9000
-      dataVolumePath: /data/nimbus/beacon-1
-      # The volume path of validator keystores. 
+      # The volume path of the directory where Nimbus will store all blockchain data.
       # If persistentVolumeType is set to "nfs", this variable represents the data volume path on NFS.
       # If the type is set to "hostPath", it represents the volume path on the host node.
-      # It's recommended to have different value for each validator client to avoid using the wrong validator client data.
+      dataVolumePath: /data/nimbus/beacon-1
+      # The volume path of validator keystores. 
+      # It's recommended to have different value for each Nimbus client to avoid using the wrong Nimbus client data.
       validatorsVolumePath: /data/nimbus/validators-1
       # The volume path of the validator keystores passwords. 
-      # It's recommended to have different value for each validator client to avoid using the wrong wallet.
+      # It's recommended to have different value for each Nimbus client to avoid using the wrong wallet.
       secretsVolumePath: /data/nimbus/secrets-1
-      # A mark you want to leave each time the validator client proposes a block.
+      # A mark you want to leave each time the Nimbus client proposes a block.
       # It can be a message or a pixel (on the graffiti wall).
       # See https://beaconcha.in/charts/graffiti_wordcloud for example.
       graffiti: "eth2 x k8s"

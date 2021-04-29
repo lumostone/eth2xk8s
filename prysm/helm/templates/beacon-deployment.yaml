@@ -33,6 +33,9 @@ spec:
         - --fallback-web3provider={{ . }}
         {{- end }}
         - --datadir=/data/prysm/beacon
+        {{- if .genesisStateFile }}
+        - --genesis-state={{ .genesisStateFile }}
+        {{- end}}
         - --accept-terms-of-use
         ports:
         - containerPort: {{ .p2pTcpPort }}
@@ -43,7 +46,6 @@ spec:
           protocol: UDP
         - containerPort: 4000
           protocol: TCP
-          hostPort: 4000
         volumeMounts:
         - name: beacon-storage
           mountPath: /data/prysm/beacon

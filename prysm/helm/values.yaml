@@ -64,6 +64,10 @@ beacon:
   fallbackWeb3Providers:
     - http://127.0.0.1:8546
     - http://127.0.0.1:8547
+  # Specifying the genesis state file will allow users to skip generating the genesis state which takes a long time of reading eth1 deposit data.
+  # Only need to specify testnet genesis file since Prysm supports embedded mainnet state.
+  # Testnet genesis files can be found in https://github.com/eth2-clients/eth2-testnets Github repo.
+  genesisStateFile: /data/prysm/beacon/prater-genesis.ssz
 
 # This field determines how long it will wait before the validator client starts or restarts.
 # It's a way to protect the validator client from double attesting or block proposing when the DB is out-of-date.

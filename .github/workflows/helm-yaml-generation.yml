@@ -32,5 +32,7 @@ jobs:
 
       - name: Push Changes
         run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -am 'Generate k8s yamls with eth2 client Helm Charts.'
           git push

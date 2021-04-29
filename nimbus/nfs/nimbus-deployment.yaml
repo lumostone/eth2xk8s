@@ -30,7 +30,6 @@ spec:
         - --data-dir=/data/nimbus
         - --validators-dir=/data/nimbus/validators
         - --secrets-dir=/data/nimbus/secrets
-        - --wallets-dir=/data/nimbus/wallets
         - --web3-url=<goerli eth1 node>
         - --graffiti="eth2 x k8s"
         ports:

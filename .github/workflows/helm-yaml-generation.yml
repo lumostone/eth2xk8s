@@ -18,7 +18,7 @@ jobs:
         env:
           clients: prysm
         run: |
-          helm --version 
+          helm version 
           helm template ./prysm/helm -f ./prysm/helm/values-files/values-host-path.yaml --output-dir ./prysm/host-path-1
 
       - name: Move Prysm yamls

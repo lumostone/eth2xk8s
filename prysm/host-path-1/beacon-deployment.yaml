@@ -1,0 +1,56 @@
+---
+# Source: eth2-prysm/templates/beacon-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beacon
+  namespace: prysm
+  labels:
+    app: beacon
+spec:
+  selector:
+    matchLabels:
+      app: beacon
+  replicas: 1
+  strategy: 
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: beacon
+    spec:
+      containers:
+      - name: beacon
+        image: "gcr.io/prysmaticlabs/prysm/beacon-chain:v1.3.8"
+        args:
+        - --prater
+        - --rpc-host=0.0.0.0
+        - --p2p-tcp-port=13000
+        - --p2p-udp-port=12000
+        - --http-web3provider=http://127.0.0.1:8545
+        - --fallback-web3provider=http://127.0.0.1:8546
+        - --fallback-web3provider=http://127.0.0.1:8547
+        - --datadir=/data/prysm/beacon
+        - --accept-terms-of-use
+        ports:
+        - containerPort: 13000
+          hostPort: 13000
+          protocol: TCP
+        - containerPort: 12000
+          hostPort: 12000
+          protocol: UDP
+        - containerPort: 4000
+          protocol: TCP
+          hostPort: 4000
+        volumeMounts:
+        - name: beacon-storage
+          mountPath: /data/prysm/beacon
+      volumes:
+      - name: beacon-storage
+        hostPath:
+          path: /data/prysm/beacon
+      securityContext:
+        runAsUser: 1001
+        runAsGroup: 2000 
+      serviceAccountName: beacon
+      restartPolicy: Always

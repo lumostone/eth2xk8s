@@ -1,0 +1,36 @@
+name: Generate k8s yamls
+
+on:
+  push:
+    branches:
+      - github-action-helm  # Set a branch to deploy
+
+jobs:
+  yaml-generation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target branch
+        uses: actions/checkout@v2 # https://github.com/actions/checkout
+        with:
+          ref: 'github-action-helm'
+
+      - name: Generate Prysm yamls
+        env:
+          clients: prysm
+        run: |
+          helm3 --version 
+          helm template ./prysm/helm -f ./prysm/helm/values-files/values-host-path.yaml --output-dir ./prysm/host-path-1
+
+      - name: Move Prysm yamls
+        run: |
+          ls ./prysm
+          ls ./prysm/host-path-1
+          ls ./prysm/host-path-1/eth2-prysm
+          ls ./prysm/host-path-1/eth2-prysm/templates
+          mv ./prysm/host-path-1/eth2-prysm/templates/* ./prysm/host-path-1/
+          rm -rf ./prysm/host-path-1/eth2-prysm
+
+      - name: Push Changes
+        run: |
+          git commit -am 'Generate k8s yamls with eth2 client Helm Charts.'
+          git push

@@ -8,31 +8,41 @@ on:
 jobs:
   yaml-generation:
     runs-on: ubuntu-latest
+    env:
+      CLIENTS: "prysm,lighthouse,teku"
     steps:
       - name: Checkout target branch
         uses: actions/checkout@v2 # https://github.com/actions/checkout
         with:
           ref: 'github-action-helm'
 
-      - name: Generate Prysm yamls
+      - name: Generate yamls for Ethereum 2.0 clients
         run: |
-          for fullfile in ./prysm/helm/values-files/* 
+          IFS="," read -ra CLIENTS <<< "$CLIENTS"
+          for client in "${CLIENTS[@]}"
             do
-            filename="${fullfile##*/}"               # Remove path.
-            foldername="${filename%.*}"              # Remove file extension.
-            foldername="${foldername##*values-}"     # Remove 'values-' string.
-            helm template ./prysm/helm -f $fullfile --output-dir ./prysm/temp/$foldername
+            for fullfile in ./$client/helm/values-files/* 
+              do
+              filename="${fullfile##*/}"               # Remove path.
+              foldername="${filename%.*}"              # Remove file extension.
+              foldername="${foldername##*values-}"     # Remove 'values-' string.
+              helm template ./$client/helm -f $fullfile --output-dir ./$client/temp/$foldername
+            done
           done
 
-      - name: Move Prysm yamls
+      - name: Rearrange the locations for yaml files.
         run: |
-          for tempdir in ./prysm/temp/*
+          IFS="," read -ra CLIENTS <<< "$CLIENTS"
+          for client in "${CLIENTS[@]}"
             do
-            dir=./prysm/"${tempdir##*/}"             # Remove path.
-            if [ ! -d "$dir" ]; then mkdir $dir; fi  # Create yaml folder if it doesn't exist.
-            mv $tempdir/eth2-prysm/templates/* $dir  # Move yamls to the correct folder.
+            for tempdir in ./$client/temp/*
+              do
+              dir=./$client/"${tempdir##*/}"             # Remove path.
+              if [ ! -d "$dir" ]; then mkdir $dir; fi  # Create yaml folder if it doesn't exist.
+              mv $tempdir/eth2-$client/templates/* $dir  # Move yamls to the correct folder.
+            done
+            rm -rf ./$client/temp
           done
-          rm -rf ./prysm/temp
 
       - name: Push Changes
         run: |

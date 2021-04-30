@@ -1,17 +1,19 @@
+---
+# Source: eth2-prysm/templates/rbac.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: beacon
   namespace: prysm
-
 ---
+# Source: eth2-prysm/templates/rbac.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: validator-client
   namespace: prysm
-
 ---
+# Source: eth2-prysm/templates/rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -23,8 +25,8 @@ rules:
 - apiGroups: [""]
   resources: ["secrets"]
   verbs: ["get", "watch", "list"]
-
 ---
+# Source: eth2-prysm/templates/rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:

@@ -1,3 +1,5 @@
+---
+# Source: eth2-lighthouse/templates/beacon-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,14 +21,14 @@ spec:
     spec:
       containers:
       - name: beacon
-        image: index.docker.io/sigp/lighthouse:v1.3.0
+        image: "index.docker.io/sigp/lighthouse:v1.3.0"
         args:
         - lighthouse
         - --network=prater
         - bn
         - --staking
         - --http-address=0.0.0.0
-        - --eth1-endpoints=<goerli eth1 node>
+        - --eth1-endpoints=http://127.0.0.1:8545,http://127.0.0.1:8546
         - --datadir=/data/lighthouse/beacon
         ports:
         - containerPort: 9000
@@ -46,6 +48,6 @@ spec:
           path: /data/lighthouse/beacon
       securityContext:
         runAsUser: 1001
-        runAsGroup: 2000
+        runAsGroup: 2000 
       serviceAccountName: beacon
       restartPolicy: Always

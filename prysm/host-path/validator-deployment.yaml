@@ -1,3 +1,5 @@
+---
+# Source: eth2-prysm/templates/validator-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,34 +18,36 @@ spec:
     metadata:
       labels:
         app: validator-client-1
+      annotations:
+        checksum/config: 738e8a2194c6076100be9e45ff68d964c8d6d13290087cdc2ff2f4e0e37d24c5
     spec:
       initContainers:
       - name: init-wait
         image: alpine:3.13.2
-        command: ['sh', '-c', 'echo Wait for 780 seconds for extra slashing protection! && sleep 780']
+        command: ['sh', '-c', 'echo "Wait for 780 second(s) for extra slashing protection!" && sleep 780']
       containers:
-      - name: validator
-        image: gcr.io/prysmaticlabs/prysm/validator:v1.3.8
+      - name: validator-client-1
+        image: "gcr.io/prysmaticlabs/prysm/validator:v1.3.8"
         args:
-        - --prater 
+        - --prater
         - --beacon-rpc-provider=beacon-service.prysm.svc.cluster.local:4000
-        - --datadir=/data/prysm/validator-client-1
-        - --wallet-dir=/data/prysm/wallet-1
+        - --datadir=/data/prysm/validator-client
+        - --wallet-dir=/data/prysm/wallet
         - --wallet-password-file=/data/prysm/password/wallet-pwd.txt
         - --graffiti="eth2 x k8s"
         - --accept-terms-of-use
         volumeMounts:
-        - name: validator-storage
-          mountPath: /data/prysm/validator-client-1
+        - name: validator-client-storage
+          mountPath: /data/prysm/validator-client
           readOnly: false
         - name: wallet-storage
-          mountPath: /data/prysm/wallet-1
+          mountPath: /data/prysm/wallet
           readOnly: false
         - name: wallet-password
           mountPath: /data/prysm/password
           readOnly: true
       volumes:
-      - name: validator-storage
+      - name: validator-client-storage
         hostPath:
           path: /data/prysm/validator-client-1
       - name: wallet-storage
@@ -52,6 +56,72 @@ spec:
       - name: wallet-password
         secret:
           secretName: wallet-password-1
+          items:
+          - key: password
+            path: wallet-pwd.txt
+      securityContext:
+        runAsUser: 1001
+        runAsGroup: 2000
+      serviceAccountName: validator-client
+      restartPolicy: Always
+---
+# Source: eth2-prysm/templates/validator-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: validator-client-2
+  namespace: prysm
+  labels:
+    app: validator-client-2
+spec:
+  selector:
+    matchLabels:
+      app: validator-client-2
+  replicas: 1
+  strategy: 
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: validator-client-2
+      annotations:
+        checksum/config: 169d1af4ca8f7555bd7221450fd1f54fbd1538ab7bb5220c96b26809748f883c
+    spec:
+      initContainers:
+      - name: init-wait
+        image: alpine:3.13.2
+        command: ['sh', '-c', 'echo "Wait for 780 second(s) for extra slashing protection!" && sleep 780']
+      containers:
+      - name: validator-client-2
+        image: "gcr.io/prysmaticlabs/prysm/validator:v1.3.8"
+        args:
+        - --prater
+        - --beacon-rpc-provider=beacon-service.prysm.svc.cluster.local:4000
+        - --datadir=/data/prysm/validator-client
+        - --wallet-dir=/data/prysm/wallet
+        - --wallet-password-file=/data/prysm/password/wallet-pwd.txt
+        - --graffiti="eth2 x k8s"
+        - --accept-terms-of-use
+        volumeMounts:
+        - name: validator-client-storage
+          mountPath: /data/prysm/validator-client
+          readOnly: false
+        - name: wallet-storage
+          mountPath: /data/prysm/wallet
+          readOnly: false
+        - name: wallet-password
+          mountPath: /data/prysm/password
+          readOnly: true
+      volumes:
+      - name: validator-client-storage
+        hostPath:
+          path: /data/prysm/validator-client-2
+      - name: wallet-storage
+        hostPath:
+          path: /data/prysm/wallet-2
+      - name: wallet-password
+        secret:
+          secretName: wallet-password-2
           items:
           - key: password
             path: wallet-pwd.txt

@@ -45,6 +45,8 @@ jobs:
           done
 
       - name: Push Changes
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
           changeText='Generate k8s yamls with eth2 client Helm Charts.'
           git config --local user.name "github-actions[bot]"

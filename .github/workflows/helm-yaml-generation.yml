@@ -3,7 +3,7 @@ name: Automatically generate k8s yamls
 on:
   push:
     branches:
-      - github-action-helm # Set a branch
+      - master # Set a branch
 
 jobs:
   yaml-generation:
@@ -13,8 +13,6 @@ jobs:
     steps:
       - name: Checkout target branch
         uses: actions/checkout@v2 # https://github.com/actions/checkout
-        with:
-          ref: 'github-action-helm'
 
       - name: Generate yamls for Ethereum 2.0 clients
         run: |
@@ -57,8 +55,7 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
           git checkout -b generated-yamls
-          echo foo > bar.txt
           git add -A
           git commit -S -m 'Automatically generate k8s yamls with eth2 client Helm Charts.'
           git push origin generated-yamls
-          # gh pr create --fill
+          gh pr create --fill

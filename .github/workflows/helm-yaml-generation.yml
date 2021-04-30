@@ -1,20 +1,18 @@
-name: Generate k8s yamls
+name: Automatically generate k8s yamls
 
 on:
   push:
     branches:
-      - github-action-helm # Set a branch
+      - master # Set a branch
 
 jobs:
   yaml-generation:
     runs-on: ubuntu-latest
     env:
-      CLIENTS: "prysm,lighthouse,teku"
+      CLIENTS: "prysm,lighthouse,teku,nimbus"
     steps:
       - name: Checkout target branch
         uses: actions/checkout@v2 # https://github.com/actions/checkout
-        with:
-          ref: 'github-action-helm'
 
       - name: Generate yamls for Ethereum 2.0 clients
         run: |
@@ -48,11 +46,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
-          changeText='Generate k8s yamls with eth2 client Helm Charts.'
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # git checkout -b github-action-helm-2
-          # git add -A
-          # git commit -am $changeText
-          # git push
-          gh pr create --title 'Test PR creation.' --body ''
+          git checkout -b github-action-helm
+          git add -A
+          git commit -am 'Automatically generate k8s yamls with eth2 client Helm Charts.'
+          git push
+          gh pr create --fill

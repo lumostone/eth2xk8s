@@ -1,0 +1,52 @@
+---
+# Source: eth2-teku/templates/beacon-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beacon
+  namespace: teku
+  labels:
+    app: beacon
+spec:
+  selector:
+    matchLabels:
+      app: beacon
+  replicas: 1
+  strategy: 
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: beacon
+    spec:
+      containers:
+      - name: beacon
+        image: "index.docker.io/consensys/teku:21.4.1"
+        args:
+        - --network=prater
+        - --rest-api-enabled
+        - --rest-api-host-allowlist=beacon-service.teku.svc.cluster.local
+        - --eth1-endpoint=http://127.0.0.1:8545
+        - --data-beacon-path=/data/teku/beacon
+        - --log-destination=CONSOLE
+        ports:
+        - containerPort: 9000
+          hostPort: 9000
+          protocol: TCP
+        - containerPort: 9000
+          hostPort: 9000
+          protocol: UDP
+        - containerPort: 5051
+          protocol: TCP
+        volumeMounts:
+        - name: beacon-storage
+          mountPath: /data/teku/beacon
+      volumes:
+      - name: beacon-storage
+        hostPath:
+          path: /data/teku/beacon
+      securityContext:
+        runAsUser: 1001
+        runAsGroup: 2000 
+      serviceAccountName: beacon
+      restartPolicy: Always

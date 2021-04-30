@@ -3,7 +3,7 @@ name: Generate k8s yamls
 on:
   push:
     branches:
-      - github-action-helm  # Set a branch to deploy
+      - github-action-helm # Set a branch
 
 jobs:
   yaml-generation:
@@ -46,8 +46,11 @@ jobs:
 
       - name: Push Changes
         run: |
+          changeText='Generate k8s yamls with eth2 client Helm Charts.'
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b github-action-helm-2
           git add -A
-          git commit -am 'Generate k8s yamls with eth2 client Helm Charts.'
+          git commit -am $changeText
           git push
+          gh pr create --title $changeText -B github-action-helm

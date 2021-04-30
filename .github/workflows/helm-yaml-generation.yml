@@ -24,7 +24,7 @@ jobs:
               filename="${fullfile##*/}"               # Remove path.
               foldername="${filename%.*}"              # Remove file extension.
               foldername="${foldername##*values-}"     # Remove 'values-' string.
-              helm template ./${client}/helm -f $fullfile --output-dir ./${client}/temp/$foldername
+              helm template ./${client}/helm -f $fullfile --output-dir ./${client}/temp/${foldername}
             done
           done
 

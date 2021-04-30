@@ -61,6 +61,6 @@ jobs:
           git checkout -b generated-yamls
           echo foo > bar.txt
           git add -A
-          git commit -Sm 'Automatically generate k8s yamls with eth2 client Helm Charts.'
+          git commit -S -m 'Automatically generate k8s yamls with eth2 client Helm Charts.'
           git push origin generated-yamls
           # gh pr create --fill

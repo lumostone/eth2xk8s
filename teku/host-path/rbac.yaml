@@ -1,0 +1,42 @@
+---
+# Source: eth2-teku/templates/rbac.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: beacon
+  namespace: teku
+---
+# Source: eth2-teku/templates/rbac.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: validator-client
+  namespace: teku
+---
+# Source: eth2-teku/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: teku
+rules:
+- apiGroups: ['policy']
+  resources: ['podsecuritypolicies']
+  verbs:     ['use']
+---
+# Source: eth2-teku/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: teku-cluster-role-rolebinding
+roleRef:
+  kind: ClusterRole
+  name: teku
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+# Authorize specific service accounts:
+- kind: ServiceAccount
+  name: beacon
+  namespace: teku
+- kind: ServiceAccount
+  name: validator-client
+  namespace: teku

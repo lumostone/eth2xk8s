@@ -1,0 +1,14 @@
+---
+# Source: eth2-teku/templates/beacon-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: beacon-service
+  namespace: teku
+spec:
+  selector:
+    app: beacon
+  ports:
+    - protocol: TCP
+      port: 5051
+      targetPort: 5051

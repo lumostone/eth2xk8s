@@ -55,4 +55,4 @@ jobs:
           # git add -A
           # git commit -am $changeText
           # git push
-          gh pr create --title 'Test PR creation.' 
+          gh pr create --title 'Test PR creation.' --body ''

@@ -19,7 +19,7 @@ jobs:
           IFS="," read -ra CLIENTS <<< "$CLIENTS"
           for client in "${CLIENTS[@]}"
             do
-            for fullfile in ./$client/helm/values-files/* 
+            for fullfile in ./{$client}/helm/values-files/* 
               do
               filename="${fullfile##*/}"               # Remove path.
               foldername="${filename%.*}"              # Remove file extension.

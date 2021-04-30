@@ -50,8 +50,7 @@ spec:
           path: {{ $validatorClient.dataVolumePath }}
         {{- end }}
       securityContext:
-        runAsUser: {{ $.Values.nfs.user }}
-        runAsGroup: {{ $.Values.nfs.group }}
+        {{- toYaml $.Values.securityContext | nindent 8 }}
       serviceAccountName: validator-client
       restartPolicy: Always
 

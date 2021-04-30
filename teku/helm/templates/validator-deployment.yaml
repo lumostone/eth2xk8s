@@ -77,8 +77,7 @@ spec:
           path: {{ $validatorClient.validatorKeyPasswordsVolumePath }}
         {{- end }}
       securityContext:
-        runAsUser: 1001
-        runAsGroup: 2000
+        {{- toYaml $.Values.securityContext | nindent 8 }}
       serviceAccountName: validator-client
       restartPolicy: Always
 

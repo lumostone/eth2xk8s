@@ -61,8 +61,7 @@ spec:
           path: {{ .dataVolumePath }}
         {{- end }}
       securityContext:
-        runAsUser: {{ $.Values.nfs.user }}
-        runAsGroup: {{ $.Values.nfs.group }} 
+        {{- toYaml $.Values.securityContext | nindent 8 }}
       serviceAccountName: beacon
       restartPolicy: Always
 {{- end }}

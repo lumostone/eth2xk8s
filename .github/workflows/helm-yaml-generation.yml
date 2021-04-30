@@ -15,20 +15,24 @@ jobs:
           ref: 'github-action-helm'
 
       - name: Generate Prysm yamls
-        env:
-          clients: prysm
         run: |
-          helm version 
-          helm template ./prysm/helm -f ./prysm/helm/values-files/values-host-path.yaml --output-dir ./prysm/host-path-1
+          for fullfile in ./prysm/helm/values-files/* 
+            do
+            filename="${fullfile##*/}"               # Remove path.
+            foldername="${filename%.*}"              # Remove file extension.
+            foldername="${foldername##*values-}"     # Remove 'values-' string.
+            helm template ./prysm/helm -f $fullfile --output-dir ./prysm/temp/$foldername
+          done
 
       - name: Move Prysm yamls
         run: |
-          ls ./prysm
-          ls ./prysm/host-path-1
-          ls ./prysm/host-path-1/eth2-prysm
-          ls ./prysm/host-path-1/eth2-prysm/templates
-          mv ./prysm/host-path-1/eth2-prysm/templates/* ./prysm/host-path-1/
-          rm -rf ./prysm/host-path-1/eth2-prysm
+          for tempdir in ./prysm/temp/*
+            do
+            dir=./prysm/"${tempdir##*/}"             # Remove path.
+            if [ ! -d "$dir" ]; then mkdir $dir; fi  # Create yaml folder if it doesn't exist.
+            mv $tempdir/eth2-prysm/templates/* $dir  # Move yamls to the correct folder.
+          done
+          rm -rf ./prysm/temp
 
       - name: Push Changes
         run: |

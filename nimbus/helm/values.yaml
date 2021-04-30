@@ -44,7 +44,7 @@ nimbus:
   # A required section that contains information for all Nimbus clients
   clients:
     # This section contains information for one Nimbus client.
-    # "nimbusClient1" is the name of this Nimbus client section. You can change it to other strings as long as it's different than other section names.
+    # "client1" is the name of this Nimbus client section. You can change it to other strings as long as it's different than other section names.
     client1:
       # This field specifies the name and label for Nimbus client deployment and container.
       name: nimbus-1

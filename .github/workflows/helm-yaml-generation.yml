@@ -19,12 +19,12 @@ jobs:
           IFS="," read -ra CLIENTS <<< "$CLIENTS"
           for client in "${CLIENTS[@]}"
             do
-            for fullfile in ./{$client}/helm/values-files/* 
+            for fullfile in ./${client}/helm/values-files/* 
               do
               filename="${fullfile##*/}"               # Remove path.
               foldername="${filename%.*}"              # Remove file extension.
               foldername="${foldername##*values-}"     # Remove 'values-' string.
-              helm template ./{$client}/helm -f $fullfile --output-dir ./{$client}/temp/$foldername
+              helm template ./${client}/helm -f $fullfile --output-dir ./${client}/temp/$foldername
             done
           done
 
@@ -33,13 +33,13 @@ jobs:
           IFS="," read -ra CLIENTS <<< "$CLIENTS"
           for client in "${CLIENTS[@]}"
             do
-            for tempdir in ./{$client}/temp/*
+            for tempdir in ./${client}/temp/*
               do
-              dir="./{$client}/${tempdir##*/}"             # Remove path.
-              if [ ! -d "$dir" ]; then mkdir $dir; fi  # Create yaml folder if it doesn't exist.
-              mv {$tempdir}/eth2-{$client}/templates/* $dir  # Move yamls to the correct folder.
+              dir="./${client}/${tempdir##*/}"               # Remove path.
+              if [ ! -d "$dir" ]; then mkdir $dir; fi        # Create yaml folder if it doesn't exist.
+              mv ${tempdir}/eth2-${client}/templates/* $dir  # Move yamls to the correct folder.
             done
-            rm -rf ./{$client}/temp
+            rm -rf ./${client}/temp
           done
 
       - name: Push Changes

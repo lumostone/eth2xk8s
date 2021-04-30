@@ -48,26 +48,25 @@ spec:
           mountPath: /data/prysm/password
           readOnly: true
       volumes:
+      {{- if eq $.Values.persistentVolumeType "nfs" }}
       - name: validator-client-storage
-        {{- if eq $.Values.persistentVolumeType "nfs" }}
         nfs:
           path: {{ $validatorClient.dataVolumePath }}
           server: {{ $.Values.nfs.serverIp }}
           readOnly: false
-        {{- else }}
-        hostPath:
-          path: {{ $validatorClient.dataVolumePath }}
-        {{- end }}
       - name: wallet-storage
-        {{- if eq $.Values.persistentVolumeType "nfs" }}
         nfs:
           path: {{ $validatorClient.walletVolumePath }}
           server: {{ $.Values.nfs.serverIp }}
           readOnly: false
-        {{- else }}
+      {{- else }}
+      - name: validator-client-storage
+        hostPath:
+          path: {{ $validatorClient.dataVolumePath }}
+      - name: wallet-storage
         hostPath:
           path: {{ $validatorClient.walletVolumePath }}
-        {{- end }}
+      {{- end }}
       - name: wallet-password
         secret:
           secretName: {{ $validatorClient.walletPasswordSecretName }}

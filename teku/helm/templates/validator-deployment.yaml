@@ -46,36 +46,33 @@ spec:
           mountPath: /data/teku/validator-key-passwords
           readOnly: true
       volumes:
+      {{- if eq $.Values.persistentVolumeType "nfs" }}
       - name: validator-client-storage
-        {{- if eq $.Values.persistentVolumeType "nfs" }}
         nfs:
           path: {{ $validatorClient.dataVolumePath }}
           server: {{ $.Values.nfs.serverIp }}
           readOnly: false
-        {{- else }}
-        hostPath:
-          path: {{ $validatorClient.dataVolumePath }}
-        {{- end }}
       - name: validator-keys-storage
-        {{- if eq $.Values.persistentVolumeType "nfs" }}
         nfs:
           path: {{ $validatorClient.validatorKeysVolumePath }}
           server: {{ $.Values.nfs.serverIp }}
           readOnly: false
-        {{- else }}
-        hostPath:
-          path: {{ $validatorClient.validatorKeysVolumePath }}
-        {{- end }}
       - name: validator-key-passwords-storage
-        {{- if eq $.Values.persistentVolumeType "nfs" }}
         nfs:
           path: {{ $validatorClient.validatorKeyPasswordsVolumePath }}
           server: {{ $.Values.nfs.serverIp }}
           readOnly: true
-        {{- else }}
+      {{- else }}
+      - name: validator-client-storage
+        hostPath:
+          path: {{ $validatorClient.dataVolumePath }}
+      - name: validator-keys-storage
+        hostPath:
+          path: {{ $validatorClient.validatorKeysVolumePath }}
+      - name: validator-key-passwords-storage
         hostPath:
           path: {{ $validatorClient.validatorKeyPasswordsVolumePath }}
-        {{- end }}
+      {{- end }}
       securityContext:
         {{- toYaml $.Values.securityContext | nindent 8 }}
       serviceAccountName: validator-client

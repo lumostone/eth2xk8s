@@ -1,22 +1,22 @@
-{{- range $key, $nimbusClient := .Values.nimbus.clients }}
+{{- range $key, $client:= .Values.nimbus.clients }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ $nimbusClient.name }}
-  namespace: nimbus
+  name: {{ $client.name }}
+  namespace: {{ $.Values.namespace }}
   labels:
-    app: {{ $nimbusClient.name }}
+    app: {{ $client.name }}
 spec:
   selector:
     matchLabels:
-      app: {{ $nimbusClient.name }}
+      app: {{ $client.name }}
   replicas: 1
   strategy: 
     type: Recreate
   template:
     metadata:
       labels:
-        app: {{ $nimbusClient.name }}
+        app: {{ $client.name }}
     spec:
       initContainers:
       - name: init-wait
@@ -30,22 +30,22 @@ spec:
         - --network={{ $.Values.ethereumTestnet }}
         {{- end }}
         - --non-interactive
-        - --tcp-port={{ $nimbusClient.p2pTcpPort }}
-        - --udp-port={{ $nimbusClient.p2pUdpPort }}
+        - --tcp-port={{ $client.p2pTcpPort }}
+        - --udp-port={{ $client.p2pUdpPort }}
         - --data-dir=/data/nimbus/beacon
         - --validators-dir=/data/nimbus/validators
         - --secrets-dir=/data/nimbus/secrets
-        - --web3-url={{ $nimbusClient.web3Provider }}
+        - --web3-url={{ $client.web3Provider }}
         {{- range .fallbackWeb3Providers }}
         - --web3-url={{ . }}
         {{- end }}
-        - --graffiti={{ $nimbusClient.graffiti | quote }}
+        - --graffiti={{ $client.graffiti | quote }}
         ports:
-        - containerPort: {{ $nimbusClient.p2pTcpPort }}
-          hostPort: {{ $nimbusClient.p2pTcpPort }}
+        - containerPort: {{ $client.p2pTcpPort }}
+          hostPort: {{ $client.p2pTcpPort }}
           protocol: TCP
-        - containerPort: {{ $nimbusClient.p2pUdpPort }}
-          hostPort: {{ $nimbusClient.p2pUdpPort }}
+        - containerPort: {{ $client.p2pUdpPort }}
+          hostPort: {{ $client.p2pUdpPort }}
           protocol: UDP
         volumeMounts:
         - name: nimbus-beacon-storage
@@ -61,29 +61,29 @@ spec:
       {{- if eq $.Values.persistentVolumeType "nfs" }}
       - name: nimbus-beacon-storage
         nfs:
-          path: {{ $nimbusClient.dataVolumePath }}
+          path: {{ $client.dataVolumePath }}
           server: {{ $.Values.nfs.serverIp }}
           readOnly: false
       - name: nimbus-validators-storage
         nfs:
-          path: {{ $nimbusClient.validatorsVolumePath }}
+          path: {{ $client.validatorsVolumePath }}
           server: {{ $.Values.nfs.serverIp }}
           readOnly: false
       - name: nimbus-secrets-storage
         nfs:
-          path: {{ $nimbusClient.secretsVolumePath }}
+          path: {{ $client.secretsVolumePath }}
           server: {{ $.Values.nfs.serverIp }}
           readOnly: true
       {{- else }}
       - name: nimbus-beacon-storage
         hostPath:
-          path: {{ $nimbusClient.dataVolumePath }}
+          path: {{ $client.dataVolumePath }}
       - name: nimbus-validator-storage
         hostPath:
-          path: {{ $nimbusClient.validatorsVolumePath }}
+          path: {{ $client.validatorsVolumePath }}
       - name: nimbus-secret-storage
         hostPath:
-          path: {{ $nimbusClient.secretsVolumePath }}
+          path: {{ $client.secretsVolumePath }}
       {{- end }}
       securityContext:
         runAsUser: {{ $.Values.nfs.user }}

@@ -42,14 +42,20 @@ jobs:
             rm -rf ./${client}/temp
           done
 
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v3
+        with:
+          gpg-private-key: ${{ secrets.GPG_KEY }}
+          passphrase: ${{ secrets.KEY_PASSPHRASE }}
+          git-user-signingkey: true
+          git-commit-gpgsign: true
+
       - name: Push Changes
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b github-action-helm
+          git checkout -b generated-yamls
           git add -A
-          git commit -am 'Automatically generate k8s yamls with eth2 client Helm Charts.'
-          git push
+          git commit -S -m 'Automatically generate k8s yamls with eth2 client Helm Charts.'
+          git push origin generated-yamls
           gh pr create --fill

@@ -1,3 +1,5 @@
+[![Automatically generate k8s yamls](https://github.com/lumostone/eth2xk8s/actions/workflows/helm-yaml-generation.yml/badge.svg?branch=master)](https://github.com/lumostone/eth2xk8s/actions/workflows/helm-yaml-generation.yml)
+
 # Eth2xK8s: Ethereum Staking with Kubernetes
 
 This repository contains Kubernetes (k8s) manifests and Helm charts that help Ethereum 2.0 stakers easily and safely install, upgrade and roll back Ethereum 2.0 clients. There are many [Ethereum 2.0 clients](https://ethereum.org/en/eth2/get-involved/#clients) and this project starts with [Prysm](https://docs.prylabs.network/docs/getting-started).

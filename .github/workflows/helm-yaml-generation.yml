@@ -67,3 +67,5 @@ jobs:
           else
             echo "PR is already opened."
           fi
+
+          echo 'test'

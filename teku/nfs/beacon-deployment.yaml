@@ -48,7 +48,7 @@ spec:
           server: 172.20.10.10
           readOnly: false
       securityContext:
+        runAsGroup: 2000
         runAsUser: 1001
-        runAsGroup: 2000 
       serviceAccountName: beacon
       restartPolicy: Always

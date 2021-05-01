@@ -57,16 +57,19 @@ jobs:
           branch="generated-yamls"
           git checkout -b $branch
           git add -A
-          git commit -S -m 'Automatically generate k8s yamls with eth2 client Helm Charts.'
-          
-          # Only continue when there's a new commit.
-          if [ "$?" -eq "1"]; then exit 0; fi
 
+          # Only commit when there's change.
+          count=$(git commit -S -m 'Automatically generate k8s yamls with eth2 client Helm Charts.' | grep "nothing to commit" | wc -l |  tr -d ' ')
+          if [ "$count" -eq "1" ]; then
+            echo "Nothing to commit. Exit now."
+            exit 0
+          fi
+          
           git push origin $branch --force
           echo "Change(s) are pushed."
 
-          count=$(gh pr list --label autogen | grep "$branch" |  wc -l | tr -d ' ')
-          if [ "$count" -eq "0" ]; then
+          prCount=$(gh pr list --label autogen | grep "$branch" |  wc -l | tr -d ' ')
+          if [ "$prCount" -eq "0" ]; then
             gh pr create --fill --label autogen
           else
             echo "PR is already opened."

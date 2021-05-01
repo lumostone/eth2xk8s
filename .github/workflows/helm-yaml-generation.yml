@@ -58,6 +58,10 @@ jobs:
           git checkout -b $branch
           git add -A
           git commit -S -m 'Automatically generate k8s yamls with eth2 client Helm Charts.'
+          
+          # Only continue when there's a new commit.
+          if [ "$?" -eq "1"]; then exit 0; fi
+
           git push origin $branch --force
           echo "Change(s) are pushed."
 

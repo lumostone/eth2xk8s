@@ -59,10 +59,11 @@ jobs:
           git add -A
           git commit -S -m 'Automatically generate k8s yamls with eth2 client Helm Charts.'
           git push origin $branch --force
+          echo "Change(s) are pushed."
 
           count=$(gh pr list --label autogen | grep "$branch" |  wc -l | tr -d ' ')
           if [ "$count" -eq "0" ]; then
             gh pr create --fill --label autogen
           else
-            echo "PR is already opened. Only pushed changes for now."
+            echo "PR is already opened."
           fi

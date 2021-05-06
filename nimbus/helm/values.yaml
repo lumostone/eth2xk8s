@@ -77,27 +77,16 @@ nimbus:
       # It can be a message or a pixel (on the graffiti wall).
       # See https://beaconcha.in/charts/graffiti_wordcloud for example.
       graffiti: "eth2 x k8s"
-    client2:
-      # This field specifies the name and label for Nimbus client deployment and container.
-      name: nimbus-2
-      web3Provider: http://127.0.0.1:8545
-      fallbackWeb3Providers:
-      p2pUdpPort: 8000
-      p2pTcpPort: 8000
-      dataVolumePath: /data/nimbus/beacon-2
-      validatorsVolumePath: /data/nimbus/validators-2
-      secretsVolumePath: /data/nimbus/secrets-2
-      graffiti: "eth2 x k8s"
-    
-  # You can add more nimbus clients below. The name of a new Nimbus client section can be client3 or anything else that you prefer
-  # as long as the section has the same indentation as other Nimbus client sections and contains all the fields under the section name.
-  # client3:
-  #   name:
-  #   web3Provider:
-  #   fallbackWeb3Providers:
-  #   p2pUdpPort:
-  #   p2pTcpPort:
-  #   dataVolumePath: 
-  #   validatorsVolumePath:
-  #   secretsVolumePath:
-  #   graffiti:
+
+    # You can add more nimbus clients below. The name of a new Nimbus client section can be client2 or anything else that you prefer
+    # as long as the section has the same indentation as other Nimbus client sections and contains all the fields under the section name, e.g.
+    # client2:
+    #   name: nimbus-2
+    #   web3Provider: http://127.0.0.1:8545
+    #   fallbackWeb3Providers:
+    #   p2pUdpPort: 8000
+    #   p2pTcpPort: 8000
+    #   dataVolumePath: /data/nimbus/beacon-2
+    #   validatorsVolumePath: /data/nimbus/validators-2
+    #   secretsVolumePath: /data/nimbus/secrets-2
+    #   graffiti: "eth2 x k8s"

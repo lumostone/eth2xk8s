@@ -51,6 +51,9 @@ beacon:
   dataVolumePath: /data/teku/beacon
   # Ethereum 1 node endpoint.
   eth1Endpoint: http://127.0.0.1:8545
+  # TCP and UDP port opened for P2P connection with the beacon node.
+  # See https://docs.teku.consensys.net/en/latest/Reference/CLI/CLI-Syntax/#p2p-port for more info.
+  p2pPort: 9000
 
 # This field determines how long it will wait before the validator client starts or restarts.
 # It's a way to protect the validator client from double attesting or block proposing when the DB is out-of-date.

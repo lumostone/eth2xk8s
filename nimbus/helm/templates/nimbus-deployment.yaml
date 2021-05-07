@@ -1,4 +1,4 @@
-{{- range $key, $client:= .Values.nimbus.clients }}
+{{- range $key, $client := .Values.nimbus.clients }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -32,9 +32,9 @@ spec:
         - --non-interactive
         - --tcp-port={{ $client.p2pTcpPort }}
         - --udp-port={{ $client.p2pUdpPort }}
-        - --data-dir=/data/nimbus/beacon
-        - --validators-dir=/data/nimbus/validators
-        - --secrets-dir=/data/nimbus/secrets
+        - --data-dir={{ $client.dataVolumePath }}
+        - --validators-dir={{ $client.validatorsVolumePath }}
+        - --secrets-dir={{ $client.secretsVolumePath }}
         - --web3-url={{ $client.web3Provider }}
         {{- range .fallbackWeb3Providers }}
         - --web3-url={{ . }}
@@ -48,43 +48,9 @@ spec:
           hostPort: {{ $client.p2pUdpPort }}
           protocol: UDP
         volumeMounts:
-        - name: nimbus-beacon-storage
-          mountPath: /data/nimbus/beacon
-          readOnly: false
-        - name: nimbus-validators-storage
-          mountPath: /data/nimbus/validators
-          readOnly: false
-        - name: nimbus-secrets-storage
-          mountPath: /data/nimbus/secrets
-          readOnly: true
+        {{- include "nimbus.volumeMounts" $client | indent 8 }}
       volumes:
-      {{- if eq $.Values.persistentVolumeType "nfs" }}
-      - name: nimbus-beacon-storage
-        nfs:
-          path: {{ $client.dataVolumePath }}
-          server: {{ $.Values.nfs.serverIp }}
-          readOnly: false
-      - name: nimbus-validators-storage
-        nfs:
-          path: {{ $client.validatorsVolumePath }}
-          server: {{ $.Values.nfs.serverIp }}
-          readOnly: false
-      - name: nimbus-secrets-storage
-        nfs:
-          path: {{ $client.secretsVolumePath }}
-          server: {{ $.Values.nfs.serverIp }}
-          readOnly: true
-      {{- else }}
-      - name: nimbus-beacon-storage
-        hostPath:
-          path: {{ $client.dataVolumePath }}
-      - name: nimbus-validator-storage
-        hostPath:
-          path: {{ $client.validatorsVolumePath }}
-      - name: nimbus-secret-storage
-        hostPath:
-          path: {{ $client.secretsVolumePath }}
-      {{- end }}
+      {{- include "nimbus.volumes" (merge $client (pick $.Values "persistentVolumeType" "nfs")) | indent 6 }}
       securityContext:
         {{- toYaml $.Values.securityContext | nindent 8 }}
       serviceAccountName: nimbus

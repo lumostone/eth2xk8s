@@ -31,48 +31,14 @@ spec:
         - --network={{ $.Values.ethereumTestnet }}
         {{- end }}
         - --beacon-node-api-endpoint=http://{{ $.Values.beacon.name }}-service.{{ $.Values.namespace }}.svc.cluster.local:5051
-        - --data-validator-path=/data/teku/validator-client
-        - --validator-keys=/data/teku/validator-keys:/data/teku/validator-key-passwords
+        - --data-validator-path={{ $validatorClient.dataVolumePath }}
+        - --validator-keys={{ $validatorClient.validatorKeysVolumePath }}:{{ $validatorClient.validatorKeyPasswordsVolumePath }}
         - --validators-graffiti={{ $validatorClient.graffiti | quote }}
         - --log-destination=CONSOLE
         volumeMounts:
-        - name: validator-client-storage
-          mountPath: /data/teku/validator-client
-          readOnly: false
-        - name: validator-keys-storage
-          mountPath: /data/teku/validator-keys
-          readOnly: false
-        - name: validator-key-passwords-storage
-          mountPath: /data/teku/validator-key-passwords
-          readOnly: true
+        {{- include "teku.volumeMounts" $validatorClient | indent 8 }}
       volumes:
-      {{- if eq $.Values.persistentVolumeType "nfs" }}
-      - name: validator-client-storage
-        nfs:
-          path: {{ $validatorClient.dataVolumePath }}
-          server: {{ $.Values.nfs.serverIp }}
-          readOnly: false
-      - name: validator-keys-storage
-        nfs:
-          path: {{ $validatorClient.validatorKeysVolumePath }}
-          server: {{ $.Values.nfs.serverIp }}
-          readOnly: false
-      - name: validator-key-passwords-storage
-        nfs:
-          path: {{ $validatorClient.validatorKeyPasswordsVolumePath }}
-          server: {{ $.Values.nfs.serverIp }}
-          readOnly: true
-      {{- else }}
-      - name: validator-client-storage
-        hostPath:
-          path: {{ $validatorClient.dataVolumePath }}
-      - name: validator-keys-storage
-        hostPath:
-          path: {{ $validatorClient.validatorKeysVolumePath }}
-      - name: validator-key-passwords-storage
-        hostPath:
-          path: {{ $validatorClient.validatorKeyPasswordsVolumePath }}
-      {{- end }}
+      {{- include "teku.volumes" (merge $validatorClient (pick $.Values "persistentVolumeType" "nfs")) | indent 6 }}
       securityContext:
         {{- toYaml $.Values.securityContext | nindent 8 }}
       serviceAccountName: validator-client

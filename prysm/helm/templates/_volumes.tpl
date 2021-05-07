@@ -1,4 +1,4 @@
-{{- define "nimbus.volumes" }}
+{{- define "prysm.volumes" }}
 {{- $uniqueVolumes := fromYaml (include "unique.volumes" . ) }}
 {{- range $volumePath, $volumeName := $uniqueVolumes }}
 - name: {{ $volumeName }}
@@ -6,7 +6,7 @@
   nfs:
     path: {{ $volumePath }}
     server: {{ $.nfs.serverIp }}
-    readOnly: {{ and (ne $volumePath $.dataVolumePath) (ne $volumePath $.validatorsVolumePath) }}
+    readOnly: {{ ne $volumePath $.dataVolumePath }}
 {{- else }}
   hostPath:
     path: {{ $volumePath }}

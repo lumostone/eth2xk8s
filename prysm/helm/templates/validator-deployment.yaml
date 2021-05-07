@@ -32,41 +32,18 @@ spec:
         - --{{ $.Values.ethereumTestnet }}
         {{- end }}
         - --beacon-rpc-provider={{ $.Values.beacon.name }}-service.{{ $.Values.namespace }}.svc.cluster.local:4000
-        - --datadir=/data/prysm/validator-client
-        - --wallet-dir=/data/prysm/wallet
+        - --datadir={{ $validatorClient.dataVolumePath }}
+        - --wallet-dir={{ $validatorClient.walletVolumePath }}
         - --wallet-password-file=/data/prysm/password/wallet-pwd.txt
         - --graffiti={{ $validatorClient.graffiti | quote }}
         - --accept-terms-of-use
         volumeMounts:
-        - name: validator-client-storage
-          mountPath: /data/prysm/validator-client
-          readOnly: false
-        - name: wallet-storage
-          mountPath: /data/prysm/wallet
-          readOnly: false
+        {{- include "prysm.volumeMounts" (merge $validatorClient (pick $.Values "persistentVolumeType" "nfs")) | indent 8 }}
         - name: wallet-password
           mountPath: /data/prysm/password
           readOnly: true
       volumes:
-      {{- if eq $.Values.persistentVolumeType "nfs" }}
-      - name: validator-client-storage
-        nfs:
-          path: {{ $validatorClient.dataVolumePath }}
-          server: {{ $.Values.nfs.serverIp }}
-          readOnly: false
-      - name: wallet-storage
-        nfs:
-          path: {{ $validatorClient.walletVolumePath }}
-          server: {{ $.Values.nfs.serverIp }}
-          readOnly: false
-      {{- else }}
-      - name: validator-client-storage
-        hostPath:
-          path: {{ $validatorClient.dataVolumePath }}
-      - name: wallet-storage
-        hostPath:
-          path: {{ $validatorClient.walletVolumePath }}
-      {{- end }}
+      {{- include "prysm.volumes" (merge $validatorClient (pick $.Values "persistentVolumeType" "nfs")) | indent 6 }}
       - name: wallet-password
         secret:
           secretName: {{ $validatorClient.walletPasswordSecretName }}

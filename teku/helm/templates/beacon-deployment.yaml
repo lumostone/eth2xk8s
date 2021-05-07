@@ -25,17 +25,18 @@ spec:
         {{- if $.Values.ethereumTestnet }}
         - --network={{ $.Values.ethereumTestnet }}
         {{- end }}
+        - --p2p-port={{ .p2pPort }}
         - --rest-api-enabled
         - --rest-api-host-allowlist={{ $.Values.beacon.name }}-service.{{ $.Values.namespace }}.svc.cluster.local
         - --eth1-endpoint={{ .eth1Endpoint }}
         - --data-beacon-path=/data/teku/beacon
         - --log-destination=CONSOLE
         ports:
-        - containerPort: 9000
-          hostPort: 9000
+        - containerPort: {{ .p2pPort }}
+          hostPort: {{ .p2pPort }}
           protocol: TCP
-        - containerPort: 9000
-          hostPort: 9000
+        - containerPort: {{ .p2pPort }}
+          hostPort: {{ .p2pPort }}
           protocol: UDP
         - containerPort: 5051
           protocol: TCP

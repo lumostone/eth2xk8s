@@ -7,7 +7,7 @@
     path: {{ $volumePath }}
     server: {{ $.nfs.serverIp }}
     readOnly: {{ and (ne $volumePath $.dataVolumePath) (ne $volumePath $.validatorsVolumePath) }}
-{{- else -}}
+{{- else }}
   hostPath:
     path: {{ $volumePath }}
 {{- end -}}

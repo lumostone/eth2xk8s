@@ -24,6 +24,7 @@ spec:
         image: "index.docker.io/consensys/teku:21.4.1"
         args:
         - --network=prater
+        - --p2p-port=9000
         - --rest-api-enabled
         - --rest-api-host-allowlist=beacon-service.teku.svc.cluster.local
         - --eth1-endpoint=http://127.0.0.1:8545

@@ -1,5 +1,5 @@
 {{- define "nimbus.volumes" }}
-{{- $uniqueVolumes := fromYaml (include "unique.volumes" . ) }}
+{{- $uniqueVolumes := fromYaml (include "nimbus.unique.volumes" . ) }}
 {{- range $volumePath, $volumeName := $uniqueVolumes }}
 - name: {{ $volumeName }}
 {{- if eq $.persistentVolumeType "nfs" }}

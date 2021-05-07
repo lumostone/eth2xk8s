@@ -36,7 +36,7 @@ spec:
         - --validators-graffiti={{ $validatorClient.graffiti | quote }}
         - --log-destination=CONSOLE
         volumeMounts:
-        {{- include "teku.volumeMounts" (merge $validatorClient (pick $.Values "persistentVolumeType" "nfs")) | indent 8 }}
+        {{- include "teku.volumeMounts" $validatorClient | indent 8 }}
       volumes:
       {{- include "teku.volumes" (merge $validatorClient (pick $.Values "persistentVolumeType" "nfs")) | indent 6 }}
       securityContext:

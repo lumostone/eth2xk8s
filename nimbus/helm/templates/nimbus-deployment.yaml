@@ -48,7 +48,7 @@ spec:
           hostPort: {{ $client.p2pUdpPort }}
           protocol: UDP
         volumeMounts:
-        {{- include "nimbus.volumeMounts" (merge $client (pick $.Values "persistentVolumeType" "nfs")) | indent 8 }}
+        {{- include "nimbus.volumeMounts" $client | indent 8 }}
       volumes:
       {{- include "nimbus.volumes" (merge $client (pick $.Values "persistentVolumeType" "nfs")) | indent 6 }}
       securityContext:

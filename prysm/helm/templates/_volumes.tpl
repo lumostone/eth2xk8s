@@ -1,5 +1,5 @@
 {{- define "prysm.volumes" }}
-{{- $uniqueVolumes := fromYaml (include "unique.volumes" . ) }}
+{{- $uniqueVolumes := fromYaml (include "prysm.unique.volumes" . ) }}
 {{- range $volumePath, $volumeName := $uniqueVolumes }}
 - name: {{ $volumeName }}
 {{- if eq $.persistentVolumeType "nfs" }}

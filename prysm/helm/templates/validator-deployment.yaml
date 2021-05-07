@@ -38,7 +38,7 @@ spec:
         - --graffiti={{ $validatorClient.graffiti | quote }}
         - --accept-terms-of-use
         volumeMounts:
-        {{- include "prysm.volumeMounts" (merge $validatorClient (pick $.Values "persistentVolumeType" "nfs")) | indent 8 }}
+        {{- include "prysm.volumeMounts" $validatorClient | indent 8 }}
         - name: wallet-password
           mountPath: /data/prysm/password
           readOnly: true

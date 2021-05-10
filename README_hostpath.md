@@ -19,15 +19,15 @@ This example demonstrates how to run one validator client and one beacon node in
     chown -R 1001:2000 /data
     ```
 
-4. Update the `extraMounts` in `cluster-config/kind-single-node.yaml` (in each client folder) with the paths to the created data folders.
-
-5. Clone this repo.
+4. Clone this repo.
 
     ```bash
     git clone https://github.com/lumostone/eth2xk8s.git
     ```
 
-6. Go the directory of the target client.
+5. Go the directory of the target client.
+
+6. Update the `extraMounts` in `cluster-config/kind-single-node.yaml` (in each client folder) with the paths to the created data folders.
 
 7. Review all manifests and change the values if needed.
 

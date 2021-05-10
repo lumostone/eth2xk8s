@@ -52,6 +52,7 @@ This example demonstrates how to run one validator client and one beacon node us
     ```
 
 ## Deploy beacon node and validator clients
+
 For Nimbus, create the Nimbus client with the following command:
 
 ```bash

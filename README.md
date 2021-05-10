@@ -186,4 +186,4 @@ If you want to develop for this project or verify your configuration quickly wit
 
 ## Testing k8s manifests
 
-Please see [Testing manifests with hostPath](https://github.com/lumostone/eth2xk8s/blob/master/README_hospath.md) and [Testing manifests with NFS](https://github.com/lumostone/eth2xk8s/blob/master/README_nfs.md) for details.
+Please see [Testing manifests with hostPath](https://github.com/lumostone/eth2xk8s/blob/master/testing-with-host-path.md) and [Testing manifests with NFS](https://github.com/lumostone/eth2xk8s/blob/master/testing-with-nfs.md) for details.

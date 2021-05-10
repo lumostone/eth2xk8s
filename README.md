@@ -29,7 +29,7 @@ If the goal is to run Ethereum 2.0 clients on mainnet, we recommend to use
 
 2. Create beacon node, validator (and/or validator keys and secrets) data folders with the correct ownership (our Helm chart uses uid 1001 and gid 2000 by default) on NFS.
 
-3. Import validator accounts.
+3. Import validator keys.
 
 4. Export created data folders as described in the NFS configuration guide.
 
@@ -61,11 +61,8 @@ If the goal is to run Ethereum 2.0 clients on mainnet, we recommend to use
 
     For Lighthouse:
     - **beacon.dataVolumePath**: The path to the data directory on the NFS for the beacon node.
-    - **beacon.web3Provider** and **beacon.fallbackWeb3Providers**: Ethereum 1.0 node endpoints.
-    - **validatorClients.validatorClient1**
-      - **.dataVolumePath**: The path to the data directory on the NFS for the validator client.
-      - **.walletVolumePath**: The path to the data directory on the NFS for the wallet.
-      - **.walletPassword**: The wallet password.
+    - **beacon.eth1Endpoints**: Ethereum 1.0 node endpoints.
+    - **validatorClients.validatorClient1.dataVolumePath**: The path to the data directory on the NFS for the validator client.
 
     For Teku:
     - **beacon.dataVolumePath**: The path to the data directory on the NFS for the beacon node.
@@ -158,32 +155,34 @@ If you want to develop for this project or verify your configuration quickly wit
 
 ### How to run the client
 
-1. Clone the repo.
+1. Create the data folders for beacon node, validator (and/or validator keys and secrets).
 
-2. Create the data folders for beacon node, validator (and/or validator keys and secrets).
+2. Import validator keys.
 
-3. Import validator keys.
-
-4. Change the directory ownership. Assume the created data folders are under `/data`:
+3. Change the directory ownership. Assume the created data folders are under `/data`:
 
    ```bash
    chown -R 1001:2000 /data
    ```
 
-5. Update the `extraMounts` in `cluster-config/kind-single-node.yaml` with the paths to the created data directories.
+4. Clone the repo.
 
-6. Install kind and create a kind cluster.
+5. Go the directory of the target client.
+
+6. Update the `extraMounts` in `cluster-config/kind-single-node.yaml` with the paths to the created data directories.
+
+7. Install kind and create a kind cluster.
 
    ```bash
    kind create cluster --config=prysm/cluster-config/kind-single-node.yaml 
    ```
 
-7. Change values in `helm/values.yaml` to match your environment.
+8. Change values in `helm/values.yaml` to match your environment.
 
    - Set **persistentVolumeType** to `hostPath`.
    - Follow the [values.yaml configuration section](#change-the-configurations-to-match-your-environment) for more details.
 
-8. Install the Helm chart `helm`.
+9. Install the Helm chart `helm`.
 
 ## Testing k8s manifests
 

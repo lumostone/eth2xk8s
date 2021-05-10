@@ -9,25 +9,27 @@ This example demonstrates how to run one validator client and one beacon node in
 
 ## Prepare the storage and manifests
 
-1. Clone this repo.
+1. Create the data folders for beacon node, validator (and/or validator keys and secrets).
 
-    ```bash
-    git clone https://github.com/lumostone/eth2xk8s.git
-    ```
+2. Import validator keys.
 
-2. Create the data folders for beacon node, validator (and/or validator keys and secrets).
-
-3. Import validator keys.
-
-4. Change the directory ownership. Assume the created data folders are under `/data`:
+3. Change the directory ownership. Assume the created data folders are under `/data`:
 
     ```bash
     chown -R 1001:2000 /data
     ```
 
-5. Update the `extraMounts` in `cluster-config/kind-single-node.yaml` (in each client folder) with the paths to the created data folders.
+4. Update the `extraMounts` in `cluster-config/kind-single-node.yaml` (in each client folder) with the paths to the created data folders.
 
-6. Review all manifests and change the values if needed.
+5. Clone this repo.
+
+    ```bash
+    git clone https://github.com/lumostone/eth2xk8s.git
+    ```
+
+6. Go the directory of the target client.
+
+7. Review all manifests and change the values if needed.
 
 ## Create and config the cluster
 

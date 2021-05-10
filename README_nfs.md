@@ -9,23 +9,17 @@ This example demonstrates how to run one validator client and one beacon node us
 
 ## Prepare the storage and manifests
 
-1. Clone this repo.
+1. Create the data folders for beacon node and validator (and/or validator keys and secrets) on NFS.
 
-    ```bash
-    git clone https://github.com/lumostone/eth2xk8s.git
-    ```
+2. Import validator keys.
 
-2. Create the data folders for beacon node and validator (and/or validator keys and secrets) on NFS.
-
-3. Import validator keys.
-
-4. Change the directory ownership. Assume the created data folders are under `/data`:
+3. Change the directory ownership. Assume the created data folders are under `/data`:
 
     ```bash
     chown -R 1001:2000 /data
     ```
 
-5. Export the data directories:
+4. Export the data directories:
 
     ```bash
     # Edit /etc/exports and add the created folders.
@@ -34,7 +28,15 @@ This example demonstrates how to run one validator client and one beacon node us
     sudo exportfs -a 
     ```
 
-6. Review all manifests and change the values if needed.
+5. Clone this repo.
+
+    ```bash
+    git clone https://github.com/lumostone/eth2xk8s.git
+    ```
+
+6. Go the directory of the target client.
+
+7. Review all manifests and change the values if needed.
 
 ## Config the cluster
 

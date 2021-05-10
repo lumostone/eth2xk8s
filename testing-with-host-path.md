@@ -43,6 +43,7 @@ This example demonstrates how to run one validator client and one beacon node in
 
     ```bash
     kubectl create namespace <namespace>
+    ```
 
 3. Apply the manifests to create RBAC resources.
 

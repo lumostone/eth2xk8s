@@ -10,9 +10,9 @@ This repository contains Kubernetes (k8s) manifests and Helm charts that help Et
 
 We've written [a blog post](https://lumostone.com/en/eth2-staking-with-k8s-prysm/) detailing the requirement and walkthrough for running Prysm on Prater. We'll add guides for other clients soon!
 
-## Install beacon node and validator with Helm
+## Quick start: Install beacon node and validator with Helm
 
-If the goal is to run Ethereum 2.0 clients on mainnet, we recommend to use
+If the goal is to run Ethereum 2.0 clients on mainnet, we recommend:
 
 - Production-grade k8s distribution to build a k8s cluster.
 - [NFS](https://en.wikipedia.org/wiki/Network_File_System) as the persistent storage.
@@ -41,7 +41,7 @@ If the goal is to run Ethereum 2.0 clients on mainnet, we recommend to use
     git clone https://github.com/lumostone/eth2xk8s.git
     ```
 
-2. Change values in the target client's values.yaml. For example, `./prysm/helm/values.yaml`.
+2. Change values in the target client's values.yaml. For example, change values in `./prysm/helm/values.yaml` for prysm client.
 
     We recommend checking each field in `values.yaml` to determine the desired configuration. Fields that need to be changed or verified before installing the chart are the following ones:
 

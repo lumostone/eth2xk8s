@@ -52,9 +52,9 @@ nimbus:
       name: nimbus-1
       # Ethereum 1 node endpoints.
       eth1Endpoints: 
-        - http://127.0.0.1:8545
-        - http://127.0.0.1:8546
-        - http://127.0.0.1:8547
+        - ws://127.0.0.1:8545
+        - ws://127.0.0.1:8546
+        - ws://127.0.0.1:8547
       # UDP Port opened for P2P connection with the beacon node.
       # See https://nimbus.guide/options.html for more info.
       p2pUdpPort: 9000
@@ -81,7 +81,7 @@ nimbus:
     # client2:
     #   name: nimbus-2
     #   eth1Endpoints: 
-    #     - http://127.0.0.1:8545
+    #     - ws://127.0.0.1:8545
     #   p2pUdpPort: 8000
     #   p2pTcpPort: 8000
     #   dataDirPath: /data/nimbus/beacon-2

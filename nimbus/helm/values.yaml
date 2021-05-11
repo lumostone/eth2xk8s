@@ -51,7 +51,7 @@ nimbus:
       # This field specifies the name and label for Nimbus client deployment and container.
       name: nimbus-1
       # Ethereum 1 node endpoints.
-      eth1Endpoints: 
+      eth1Endpoints:
         - ws://127.0.0.1:8545
         - ws://127.0.0.1:8546
         - ws://127.0.0.1:8547
@@ -80,7 +80,7 @@ nimbus:
     # as long as the section has the same indentation as other Nimbus client sections and contains all the fields under the section name, e.g.
     # client2:
     #   name: nimbus-2
-    #   eth1Endpoints: 
+    #   eth1Endpoints:
     #     - ws://127.0.0.1:8545
     #   p2pUdpPort: 8000
     #   p2pTcpPort: 8000

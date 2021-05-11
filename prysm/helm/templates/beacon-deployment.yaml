@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: {{ .name }}
-        image: "{{ $.Values.image.beaconImage }}:{{ $.Values.image.version }}"
+        image: "{{ $.Values.image.beaconImage }}:{{ $.Values.image.versionTag }}"
         args:
         {{- if $.Values.ethereumTestnet }}
         - --{{ $.Values.ethereumTestnet }}
@@ -28,8 +28,10 @@ spec:
         - --rpc-host=0.0.0.0
         - --p2p-tcp-port={{ .p2pTcpPort }}
         - --p2p-udp-port={{ .p2pUdpPort }}
-        - --http-web3provider={{ .web3Provider }}
-        {{- range .fallbackWeb3Providers }}
+        {{ if .eth1Endpoints }}
+        - --http-web3provider={{ first .eth1Endpoints }}
+        {{- end }}
+        {{- range rest .eth1Endpoints }}
         - --fallback-web3provider={{ . }}
         {{- end }}
         - --datadir=/data/prysm/beacon

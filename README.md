@@ -53,7 +53,7 @@ If the goal is to run Ethereum 2.0 clients on mainnet, we recommend:
 
     For Prysm:
     - **beacon.dataDirPath**: The path to the data directory on the NFS for the beacon node.
-    - **beacon.web3Provider** and **beacon.fallbackWeb3Providers**: Ethereum 1.0 node endpoints.
+    - **beacon.eth1Endpoints**: Ethereum 1.0 node endpoints.
     - **validatorClients.validatorClient1**
       - **.dataDirPath**: The path to the data directory on the NFS for the validator client.
       - **.walletDirPath**: The path to the data directory on the NFS for the wallet.
@@ -66,7 +66,7 @@ If the goal is to run Ethereum 2.0 clients on mainnet, we recommend:
 
     For Teku:
     - **beacon.dataDirPath**: The path to the data directory on the NFS for the beacon node.
-    - **beacon.eth1Endpoint**: Ethereum 1.0 node endpoint.
+    - **beacon.eth1Endpoints**: Ethereum 1.0 node endpoints.
     - **validatorClients.validatorClient1**
       - **.dataDirPath**: The path to the data directory on the NFS for the validator client.
       - **.validatorKeysDirPath**: The path to the data directory on the NFS for the validator keys.
@@ -74,7 +74,7 @@ If the goal is to run Ethereum 2.0 clients on mainnet, we recommend:
 
     For Nimbus:
     - **nimbus.clients.client1**
-      - **.web3Provider** and **.fallbackWeb3Providers**: Ethereum 1.0 node endpoints.
+      - **.eth1Endpoints**: Ethereum 1.0 node endpoints.
       - **.dataDirPath**: The path to the data directory on the NFS for the beacon node.
       - **.validatorsDirPath**: The path to the data directory on the NFS for the validator keystores.
       - **.secretsDirPath**: The path to the data directory on the NFS for the validator keystore passwords.

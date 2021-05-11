@@ -39,7 +39,7 @@ image:
   validatorImage: index.docker.io/consensys/teku
   # Teku release version. 
   # Check https://github.com/consensys/teku/releases for more info. 
-  version: 21.4.1
+  versionTag: 21.4.1
 
 # A required section that contains beacon chain information.
 beacon:
@@ -49,8 +49,11 @@ beacon:
   # If persistentVolumeType is set to "nfs", this variable represents the data volume path on NFS.
   # If the type is set to "hostPath", it represents the volume path on the host node.
   dataDirPath: /data/teku/beacon
-  # Ethereum 1 node endpoint.
-  eth1Endpoint: http://127.0.0.1:8545
+  # Ethereum 1 node endpoints.
+  eth1Endpoints: 
+    - http://127.0.0.1:8545
+    - http://127.0.0.1:8546
+    - http://127.0.0.1:8547
   # TCP and UDP port opened for P2P connection with the beacon node.
   # See https://docs.teku.consensys.net/en/latest/Reference/CLI/CLI-Syntax/#p2p-port for more info.
   p2pPort: 9000

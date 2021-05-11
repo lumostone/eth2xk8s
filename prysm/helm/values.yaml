@@ -42,7 +42,7 @@ image:
   validatorImage: gcr.io/prysmaticlabs/prysm/validator 
   # Prysm release version. 
   # Check https://github.com/prysmaticlabs/prysm/releases for more info. 
-  version: v1.3.8
+  versionTag: v1.3.8-hotfix+6c0942
 
 # A required section that contains beacon chain information.
 beacon:
@@ -58,12 +58,9 @@ beacon:
   # TCP Port opened for P2P connection with the beacon node.
   # See https://docs.prylabs.network/docs/prysm-usage/p2p-host-ip for more info.
   p2pTcpPort: 13000
-  # Main Ethereum 1 node endpoint.
-  web3Provider: http://127.0.0.1:8545
-  # Fallback Ethereum 1 node endpoints. 
-  # When the main endpoint isn't available, Prysm will use these fallback endpoints instead until the main endpoint becomes available again.
-  # See https://docs.prylabs.network/docs/prysm-usage/setup-eth1/#adding-fallback-eth1-nodes more info.
-  fallbackWeb3Providers:
+  # Ethereum 1 node endpoints.
+  eth1Endpoints: 
+    - http://127.0.0.1:8545
     - http://127.0.0.1:8546
     - http://127.0.0.1:8547
   # Specifying the genesis state file will allow users to skip generating the genesis state which takes a long time of reading eth1 deposit data.

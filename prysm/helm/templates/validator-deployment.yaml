@@ -26,7 +26,7 @@ spec:
         command: ['sh', '-c', 'echo "Wait for {{ $.Values.validatorStartWaitTime }} second(s) for extra slashing protection!" && sleep {{ $.Values.validatorStartWaitTime }}']
       containers:
       - name: {{ $validatorClient.name }}
-        image: "{{ $.Values.image.validatorImage }}:{{ $.Values.image.version }}"
+        image: "{{ $.Values.image.validatorImage }}:{{ $.Values.image.versionTag }}"
         args:
         {{- if $.Values.ethereumTestnet }}
         - --{{ $.Values.ethereumTestnet }}

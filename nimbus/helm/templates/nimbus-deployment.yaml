@@ -35,8 +35,7 @@ spec:
         - --data-dir={{ $client.dataDirPath }}
         - --validators-dir={{ $client.validatorsDirPath }}
         - --secrets-dir={{ $client.secretsDirPath }}
-        - --web3-url={{ $client.web3Provider }}
-        {{- range .fallbackWeb3Providers }}
+        {{- range .eth1Endpoints }}
         - --web3-url={{ . }}
         {{- end }}
         - --graffiti={{ $client.graffiti | quote }}

@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: {{ .name }}
-        image: "{{ $.Values.image.beaconImage }}:{{ $.Values.image.version }}"
+        image: "{{ $.Values.image.beaconImage }}:{{ $.Values.image.versionTag }}"
         args:
         {{- if $.Values.ethereumTestnet }}
         - --network={{ $.Values.ethereumTestnet }}
@@ -28,7 +28,7 @@ spec:
         - --p2p-port={{ .p2pPort }}
         - --rest-api-enabled
         - --rest-api-host-allowlist={{ $.Values.beacon.name }}-service.{{ $.Values.namespace }}.svc.cluster.local
-        - --eth1-endpoint={{ .eth1Endpoint }}
+        - --eth1-endpoints={{ .eth1Endpoints | join "," }}
         - --data-beacon-path=/data/teku/beacon
         - --log-destination=CONSOLE
         ports:

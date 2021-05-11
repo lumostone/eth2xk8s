@@ -39,7 +39,7 @@ image:
   validatorImage: index.docker.io/sigp/lighthouse
   # Lighthouse release version. 
   # Check https://github.com/sigp/lighthouse/releases for more info. 
-  version: v1.3.0
+  versionTag: v1.3.0
 
 # A required section that contains beacon chain information.
 beacon:

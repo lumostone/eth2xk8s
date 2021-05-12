@@ -1,6 +1,6 @@
 {{- define "prysm.unique.volumes" }}
-{{- $volumeDict1 := dict .dataVolumePath "validator" }} 
-{{- $volumeDict2 := dict .walletVolumePath "wallet" }}
+{{- $volumeDict1 := dict .dataDirPath "validator" }} 
+{{- $volumeDict2 := dict .walletDirPath "wallet" }}
 {{- $uniqueVolumePaths := keys $volumeDict1 $volumeDict2 | uniq }}
 {{- $finalDict := dict }}
 {{- if lt (len $uniqueVolumePaths) 2 }}

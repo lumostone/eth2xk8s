@@ -47,12 +47,12 @@ spec:
       - name: beacon-storage
         {{- if eq $.Values.persistentVolumeType "nfs" }}
         nfs:
-          path: {{ .dataVolumePath }}
+          path: {{ .dataDirPath }}
           server: {{ $.Values.nfs.serverIp }}
           readOnly: false
         {{- else }}
         hostPath:
-          path: {{ .dataVolumePath }}
+          path: {{ .dataDirPath }}
         {{- end }}
       securityContext:
         {{- toYaml $.Values.securityContext | nindent 8 }}

@@ -1,7 +1,7 @@
 {{- define "nimbus.unique.volumes" }}
-{{- $volumeDict1 := dict .dataVolumePath "beacon" }}
-{{- $volumeDict2 := dict .validatorsVolumePath "validators" }} 
-{{- $volumeDict3 := dict .secretsVolumePath "secrets" }}
+{{- $volumeDict1 := dict .dataDirPath "beacon" }}
+{{- $volumeDict2 := dict .validatorsDirPath "validators" }} 
+{{- $volumeDict3 := dict .secretsDirPath "secrets" }}
 {{- $uniqueVolumePaths := keys $volumeDict1 $volumeDict2 $volumeDict3 | uniq }}
 {{- $finalDict := dict }}
 {{- if lt (len $uniqueVolumePaths) 3 }}

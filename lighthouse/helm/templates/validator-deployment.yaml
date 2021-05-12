@@ -32,22 +32,22 @@ spec:
         {{- end }}
         - vc
         - --beacon-nodes=http://{{ $.Values.beacon.name }}-service.{{ $.Values.namespace }}.svc.cluster.local:5052
-        - --datadir={{ $validatorClient.dataVolumePath }}
+        - --datadir={{ $validatorClient.dataDirPath }}
         - --graffiti={{ $validatorClient.graffiti | quote }}
         volumeMounts:
         - name: validator-client-storage
-          mountPath: {{ $validatorClient.dataVolumePath }}
+          mountPath: {{ $validatorClient.dataDirPath }}
           readOnly: false
       volumes:
       - name: validator-client-storage
         {{- if eq $.Values.persistentVolumeType "nfs" }}
         nfs:
-          path: {{ $validatorClient.dataVolumePath }}
+          path: {{ $validatorClient.dataDirPath }}
           server: {{ $.Values.nfs.serverIp }}
           readOnly: false
         {{- else }}
         hostPath:
-          path: {{ $validatorClient.dataVolumePath }}
+          path: {{ $validatorClient.dataDirPath }}
         {{- end }}
       securityContext:
         {{- toYaml $.Values.securityContext | nindent 8 }}

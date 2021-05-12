@@ -45,10 +45,10 @@ image:
 beacon:
   # This field specifies the name and label for beacon chain deployment, container and service.
   name: beacon
-  # The volume path of beacon chain data. 
+  # The path to the beacon chain data directory. 
   # If persistentVolumeType is set to "nfs", this variable represents the data volume path on NFS.
   # If the type is set to "hostPath", it represents the volume path on the host node.
-  dataVolumePath: /data/lighthouse/beacon
+  dataDirPath: /data/lighthouse/beacon
   # Ethereum 1 node endpoints.
   eth1Endpoints: 
     - http://127.0.0.1:8545
@@ -65,11 +65,11 @@ validatorClients:
   validatorClient1:
     # This field specifies the name and label for validator client deployment, container and service.
     name: validator-client-1
-    # The volume path of validator client data. 
+    # The path to the validator client data directory. 
     # If persistentVolumeType is set to "nfs", this variable represents the data volume path on NFS.
     # If the type is set to "hostPath", it represents the volume path on the host node.
     # It's recommended to have different value for each validator client to avoid using the wrong validator client data.
-    dataVolumePath: /data/lighthouse/validator-client-1  
+    dataDirPath: /data/lighthouse/validator-client-1  
     # A mark you want to leave each time the validator client proposes a block.
     # It can be a message or a pixel (on the graffiti wall).
     # See https://beaconcha.in/charts/graffiti_wordcloud for example.
@@ -79,5 +79,5 @@ validatorClients:
   # as long as the section has the same indentation as other validator client sections and contains all the fields under the section name, e.g.
   # validatorClient2:
   #   name: validator-client-2
-  #   dataVolumePath: /data/lighthouse/validator-client-2
+  #   dataDirPath: /data/lighthouse/validator-client-2
   #   graffiti: "eth2 x k8s"

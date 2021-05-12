@@ -3,6 +3,6 @@
 {{- range $volumePath, $volumeName := $uniqueVolumes }}
 - name: {{ $volumeName }}
   mountPath: {{ $volumePath }}
-  readOnly: {{ and (ne $volumePath $.dataVolumePath) (ne $volumePath $.validatorKeysVolumePath) }}
+  readOnly: {{ and (ne $volumePath $.dataDirPath) (ne $volumePath $.validatorKeysDirPath) }}
 {{- end -}}
 {{- end -}}

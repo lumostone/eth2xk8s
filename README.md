@@ -52,32 +52,32 @@ If the goal is to run Ethereum 2.0 clients on mainnet, we recommend:
     - **image.versionTag**: Client version.
 
     For Prysm:
-    - **beacon.dataVolumePath**: The path to the data directory on the NFS for the beacon node.
+    - **beacon.dataDirPath**: The path to the data directory on the NFS for the beacon node.
     - **beacon.web3Provider** and **beacon.fallbackWeb3Providers**: Ethereum 1.0 node endpoints.
     - **validatorClients.validatorClient1**
-      - **.dataVolumePath**: The path to the data directory on the NFS for the validator client.
-      - **.walletVolumePath**: The path to the data directory on the NFS for the wallet.
+      - **.dataDirPath**: The path to the data directory on the NFS for the validator client.
+      - **.walletDirPath**: The path to the data directory on the NFS for the wallet.
       - **.walletPassword**: The wallet password.
 
     For Lighthouse:
-    - **beacon.dataVolumePath**: The path to the data directory on the NFS for the beacon node.
+    - **beacon.dataDirPath**: The path to the data directory on the NFS for the beacon node.
     - **beacon.eth1Endpoints**: Ethereum 1.0 node endpoints.
-    - **validatorClients.validatorClient1.dataVolumePath**: The path to the data directory on the NFS for the validator client.
+    - **validatorClients.validatorClient1.dataDirPath**: The path to the data directory on the NFS for the validator client.
 
     For Teku:
-    - **beacon.dataVolumePath**: The path to the data directory on the NFS for the beacon node.
+    - **beacon.dataDirPath**: The path to the data directory on the NFS for the beacon node.
     - **beacon.eth1Endpoint**: Ethereum 1.0 node endpoint.
     - **validatorClients.validatorClient1**
-      - **.dataVolumePath**: The path to the data directory on the NFS for the validator client.
-      - **.validatorKeysVolumePath**: The path to the data directory on the NFS for the validator keys.
-      - **.validatorKeyPasswordsVolumePath**: The path to the data directory on the NFS for the validator key passwords.
+      - **.dataDirPath**: The path to the data directory on the NFS for the validator client.
+      - **.validatorKeysDirPath**: The path to the data directory on the NFS for the validator keys.
+      - **.validatorKeyPasswordsDirPath**: The path to the data directory on the NFS for the validator key passwords.
 
     For Nimbus:
     - **nimbus.clients.client1**
       - **.web3Provider** and **.fallbackWeb3Providers**: Ethereum 1.0 node endpoints.
-      - **.dataVolumePath**: The path to the data directory on the NFS for the beacon node.
-      - **.validatorsVolumePath**: The path to the data directory on the NFS for the validator keystores.
-      - **.secretsVolumePath**: The path to the data directory on the NFS for the validator keystore passwords.
+      - **.dataDirPath**: The path to the data directory on the NFS for the beacon node.
+      - **.validatorsDirPath**: The path to the data directory on the NFS for the validator keystores.
+      - **.secretsDirPath**: The path to the data directory on the NFS for the validator keystore passwords.
 
 ### Install, upgrade, roll back and uninstall Helm chart
 

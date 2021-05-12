@@ -1,7 +1,7 @@
 {{- define "teku.unique.volumes" }}
-{{- $volumeDict1 := dict .dataVolumePath "validator" }}
-{{- $volumeDict2 := dict .validatorKeysVolumePath "keys" }} 
-{{- $volumeDict3 := dict .validatorKeyPasswordsVolumePath "passwords" }}
+{{- $volumeDict1 := dict .dataDirPath "validator" }}
+{{- $volumeDict2 := dict .validatorKeysDirPath "keys" }} 
+{{- $volumeDict3 := dict .validatorKeyPasswordsDirPath "passwords" }}
 {{- $uniqueVolumePaths := keys $volumeDict1 $volumeDict2 $volumeDict3 | uniq }}
 {{- $finalDict := dict }}
 {{- if lt (len $uniqueVolumePaths) 3 }}

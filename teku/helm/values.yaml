@@ -45,10 +45,10 @@ image:
 beacon:
   # This field specifies the name and label for beacon chain deployment, container and service.
   name: beacon
-  # The volume path of beacon chain data. 
+  # The path to the beacon chain data directory. 
   # If persistentVolumeType is set to "nfs", this variable represents the data volume path on NFS.
   # If the type is set to "hostPath", it represents the volume path on the host node.
-  dataVolumePath: /data/teku/beacon
+  dataDirPath: /data/teku/beacon
   # Ethereum 1 node endpoint.
   eth1Endpoint: http://127.0.0.1:8545
   # TCP and UDP port opened for P2P connection with the beacon node.
@@ -66,17 +66,17 @@ validatorClients:
   validatorClient1:
     # This field specifies the name and label for validator client deployment, container and service.
     name: validator-client-1
-    # The volume path of validator client data. 
+    # The path to the validator client data directory.
     # If persistentVolumeType is set to "nfs", this variable represents the data volume path on NFS.
     # If the type is set to "hostPath", it represents the volume path on the host node.
     # It's recommended to have different value for each validator client to avoid using the wrong validator client data.
-    dataVolumePath: /data/teku/validator-client-1
-    # The volume path of the validator keys. 
+    dataDirPath: /data/teku/validator-client-1
+    # The path to the validator keys directory.
     # It's recommended to have different value for each validator client to avoid using the wrong validator keys.
-    validatorKeysVolumePath: /data/teku/validator-keys-1
-    # The validator key passwords.
+    validatorKeysDirPath: /data/teku/validator-keys-1
+    # The path to the validator key passwords directory.
     # It's recommended to have different value for each validator client to avoid using the wrong validator key passwords.
-    validatorKeyPasswordsVolumePath: /data/teku/validator-key-passwords-1
+    validatorKeyPasswordsDirPath: /data/teku/validator-key-passwords-1
     # A mark you want to leave each time the validator client proposes a block.
     # It can be a message or a pixel (on the graffiti wall).
     # See https://beaconcha.in/charts/graffiti_wordcloud for example.
@@ -86,7 +86,7 @@ validatorClients:
   # as long as the section has the same indentation as other validator client sections and contains all the fields under the section name, e.g.
   # validatorClient2:
   #   name: validator-client-2
-  #   dataVolumePath: /data/teku/validator-client-2
-  #   validatorKeysVolumePath: /data/teku/validator-keys-2
-  #   validatorKeyPasswordsVolumePath: /data/teku/validator-key-passwords-2
+  #   dataDirPath: /data/teku/validator-client-2
+  #   validatorKeysDirPath: /data/teku/validator-keys-2
+  #   validatorKeyPasswordsDirPath: /data/teku/validator-key-passwords-2
   #   graffiti: "eth2 x k8s"

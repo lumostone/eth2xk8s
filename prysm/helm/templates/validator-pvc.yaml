@@ -1,0 +1,13 @@
+{{- range $key, $validatorClient := .Values.validatorClients }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $validatorClient.name }}-pvc
+  namespace: {{ $.Values.namespace }}
+spec:
+  accessModes: ["ReadWriteMany"] # for data copy
+  storageClassName: {{ $.Values.persistentVolumeClaim.storageClassName }}
+  resources:
+    requests:
+      storage: {{ $.Values.persistentVolumeClaim.validatorRequestSize }}
+{{- end -}}

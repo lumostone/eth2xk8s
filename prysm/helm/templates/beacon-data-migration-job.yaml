@@ -1,0 +1,55 @@
+{{- if .Release.IsInstall -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Values.beacon.name }}-copy-data"
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/version: {{.Chart.AppVersion }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  completions: 1
+  parallelism: 1
+  backoffLimit: 3
+  template:
+    metadata:
+      name: volume-migration
+      labels:
+        name: volume-migration
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: volume-migration
+          image: ubuntu:xenial
+          tty: true
+          command:
+          - /bin/sh
+          - -c
+          - | 
+            dirToCreate=$(dirname {{ .Values.beacon.genesisStateFile }})
+            mkdir -p /mnt/new${dirToCreate} || true
+            dirToCreate=$(dirname {{ .Values.beacon.dataDirPath }})
+            mkdir -p /mnt/new${dirToCreate} || true
+            cp -v /mnt/old{{ .Values.beacon.genesisStateFile }} /mnt/new{{ .Values.beacon.genesisStateFile }}
+            cp -r -v /mnt/old{{ .Values.beacon.dataDirPath }} /mnt/new{{ .Values.beacon.dataDirPath }}
+          volumeMounts:
+            - name: old-vol
+              mountPath: /mnt/old
+            - name: new-vol
+              mountPath: /mnt/new
+      volumes:
+        - name: old-vol
+          {{- toYaml .Values.beacon.dataSource | nindent 10 }}
+        - name: new-vol
+          persistentVolumeClaim:
+            claimName: {{ .Values.beacon.name }}-pvc # change to data target pvc
+      securityContext:
+        {{- toYaml $.Values.securityContext | nindent 8 }}
+{{- end -}}

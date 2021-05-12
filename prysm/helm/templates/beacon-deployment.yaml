@@ -32,10 +32,17 @@ spec:
         {{- range .fallbackWeb3Providers }}
         - --fallback-web3provider={{ . }}
         {{- end }}
+        {{- if eq $.Values.persistentVolumeType "persistentVolumeClaim" }}
+        - --datadir=/pv/data/prysm/beacon
+        {{- if .genesisStateFile }}
+        - --genesis-state=/pv{{ .genesisStateFile }}
+        {{- end }}
+        {{- else }}
         - --datadir=/data/prysm/beacon
         {{- if .genesisStateFile }}
         - --genesis-state={{ .genesisStateFile }}
-        {{- end}}
+        {{- end }}
+        {{- end }}
         - --accept-terms-of-use
         ports:
         - containerPort: {{ .p2pTcpPort }}
@@ -47,8 +54,14 @@ spec:
         - containerPort: 4000
           protocol: TCP
         volumeMounts:
+        {{- if eq $.Values.persistentVolumeType "persistentVolumeClaim" }}
+        - name: beacon-storage
+          mountPath: /pv
+          readOnly: false
+        {{- else }}
         - name: beacon-storage
           mountPath: /data/prysm/beacon
+        {{- end }}
       volumes:
       - name: beacon-storage
         {{- if eq $.Values.persistentVolumeType "nfs" }}
@@ -56,9 +69,12 @@ spec:
           path: {{ .dataDirPath }}
           server: {{ $.Values.nfs.serverIp }}
           readOnly: false
-        {{- else }}
+        {{- else if eq $.Values.persistentVolumeType "hostPath" }}
         hostPath:
           path: {{ .dataDirPath }}
+        {{- else }}
+        persistentVolumeClaim:
+          claimName: {{ .name }}-pvc
         {{- end }}
       securityContext:
         {{- toYaml $.Values.securityContext | nindent 8 }}

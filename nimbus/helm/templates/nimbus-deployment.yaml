@@ -32,9 +32,9 @@ spec:
         - --non-interactive
         - --tcp-port={{ $client.p2pTcpPort }}
         - --udp-port={{ $client.p2pUdpPort }}
-        - --data-dir={{ $client.dataVolumePath }}
-        - --validators-dir={{ $client.validatorsVolumePath }}
-        - --secrets-dir={{ $client.secretsVolumePath }}
+        - --data-dir={{ $client.dataDirPath }}
+        - --validators-dir={{ $client.validatorsDirPath }}
+        - --secrets-dir={{ $client.secretsDirPath }}
         - --web3-url={{ $client.web3Provider }}
         {{- range .fallbackWeb3Providers }}
         - --web3-url={{ . }}

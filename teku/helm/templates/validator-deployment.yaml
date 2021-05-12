@@ -31,8 +31,8 @@ spec:
         - --network={{ $.Values.ethereumTestnet }}
         {{- end }}
         - --beacon-node-api-endpoint=http://{{ $.Values.beacon.name }}-service.{{ $.Values.namespace }}.svc.cluster.local:5051
-        - --data-validator-path={{ $validatorClient.dataVolumePath }}
-        - --validator-keys={{ $validatorClient.validatorKeysVolumePath }}:{{ $validatorClient.validatorKeyPasswordsVolumePath }}
+        - --data-validator-path={{ $validatorClient.dataDirPath }}
+        - --validator-keys={{ $validatorClient.validatorKeysDirPath }}:{{ $validatorClient.validatorKeyPasswordsDirPath }}
         - --validators-graffiti={{ $validatorClient.graffiti | quote }}
         - --log-destination=CONSOLE
         volumeMounts:

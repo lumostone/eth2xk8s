@@ -1,14 +1,17 @@
 [![Automatically generate k8s yamls](https://github.com/lumostone/eth2xk8s/actions/workflows/helm-yaml-generation.yml/badge.svg?branch=master)](https://github.com/lumostone/eth2xk8s/actions/workflows/helm-yaml-generation.yml)
 
-# Eth2xK8s: Ethereum Staking with Kubernetes
+# Eth2xK8s: Ethereum 2.0 Staking with Kubernetes
 
 This repository contains Kubernetes (k8s) manifests and Helm charts that help Ethereum 2.0 stakers easily and safely install, upgrade and roll back Ethereum 2.0 clients. There are many [Ethereum 2.0 clients](https://ethereum.org/en/eth2/get-involved/#clients) and this project includes [Prysm](https://github.com/prysmaticlabs/prysm), [Lighthouse](https://github.com/sigp/lighthouse), [Teku](https://github.com/ConsenSys/teku/) and [Nimbus](https://github.com/status-im/nimbus-eth2).
 
-**This project is still in development and it's NOT recommended to be used on mainnet.**
+## Disclaimer
+As of today, this setup has been tested in the testnet only.
+
+We all stake at our own risk. Please always do the experiments and dry-run on the testnet first, familiarize yourself with all the operations, and harden your systems before running it on the mainnet. This project serves as a stepping stone for staking with Kubernetes. The maintainers of this repository are not responsible for any financial losses incurred by using this repository.
 
 ## Detailed guide for running clients on Prater
 
-We've written [a blog post](https://lumostone.com/en/posts/eth2-staking-with-k8s/) detailing the requirement and walkthrough for running Prysm on Prater. We'll add guides for other clients soon!
+We've written [a blog post](https://lumostone.com/en/posts/eth2-staking-with-k8s/) detailing the requirement and walkthrough for running Ethereum 2.0 clients on Prater. You can also find the quick start guide in the following sections.
 
 ## Quick start: Install beacon node and validator with Helm
 
@@ -174,7 +177,7 @@ If you want to develop for this project or verify your configuration quickly wit
 7. Install kind and create a kind cluster.
 
    ```bash
-   kind create cluster --config=prysm/cluster-config/kind-single-node.yaml 
+   kind create cluster --config=cluster-config/kind-single-node.yaml 
    ```
 
 8. Change values in `helm/values.yaml` to match your environment.

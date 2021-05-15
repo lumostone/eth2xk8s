@@ -7,7 +7,7 @@ This repository contains Kubernetes (k8s) manifests and Helm charts that help Et
 ## Disclaimer
 As of today, this setup has been tested in the testnet only.
 
-We all stake at our own risk. Please always do the experiments and dry-run on the testnet first, familiarize yourself with all the operations, and harden your systems before running it on the mainnet. This guide serves as a stepping stone for staking with Kubernetes. The maintainers of this repository are not responsible for any financial losses incurred by following this guide.
+We all stake at our own risk. Please always do the experiments and dry-run on the testnet first, familiarize yourself with all the operations, and harden your systems before running it on the mainnet. This project serves as a stepping stone for staking with Kubernetes. The maintainers of this repository are not responsible for any financial losses incurred by using this repository.
 
 ## Detailed guide for running clients on Prater
 

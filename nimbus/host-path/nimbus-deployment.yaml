@@ -25,18 +25,18 @@ spec:
         command: ['sh', '-c', 'echo Wait for 780 seconds for extra slashing protection! && sleep 780']
       containers:
       - name: nimbus
-        image: "index.docker.io/statusim/nimbus-eth2:amd64-v1.2.1"
+        image: "index.docker.io/statusim/nimbus-eth2:amd64-v1.2.2"
         args:
         - --network=prater
         - --non-interactive
         - --tcp-port=9000
         - --udp-port=9000
-        - --data-dir=/data/nimbus/beacon
-        - --validators-dir=/data/nimbus/validators
-        - --secrets-dir=/data/nimbus/secrets
-        - --web3-url=http://127.0.0.1:8545
-        - --web3-url=http://127.0.0.1:8546
-        - --web3-url=http://127.0.0.1:8547
+        - --data-dir=/data/nimbus/beacon-1
+        - --validators-dir=/data/nimbus/validators-1
+        - --secrets-dir=/data/nimbus/secrets-1
+        - --web3-url=ws://127.0.0.1:8545
+        - --web3-url=ws://127.0.0.1:8546
+        - --web3-url=ws://127.0.0.1:8547
         - --graffiti="eth2 x k8s"
         ports:
         - containerPort: 9000
@@ -45,26 +45,26 @@ spec:
         - containerPort: 9000
           hostPort: 9000
           protocol: UDP
-        volumeMounts:
+        volumeMounts:        
         - name: nimbus-beacon-storage
-          mountPath: /data/nimbus/beacon
-          readOnly: false
-        - name: nimbus-validators-storage
-          mountPath: /data/nimbus/validators
+          mountPath: /data/nimbus/beacon-1
           readOnly: false
         - name: nimbus-secrets-storage
-          mountPath: /data/nimbus/secrets
+          mountPath: /data/nimbus/secrets-1
           readOnly: true
-      volumes:
+        - name: nimbus-validators-storage
+          mountPath: /data/nimbus/validators-1
+          readOnly: false
+      volumes:      
       - name: nimbus-beacon-storage
         hostPath:
           path: /data/nimbus/beacon-1
-      - name: nimbus-validator-storage
-        hostPath:
-          path: /data/nimbus/validators-1
-      - name: nimbus-secret-storage
+      - name: nimbus-secrets-storage
         hostPath:
           path: /data/nimbus/secrets-1
+      - name: nimbus-validators-storage
+        hostPath:
+          path: /data/nimbus/validators-1
       securityContext:
         runAsGroup: 2000
         runAsUser: 1001

@@ -21,13 +21,13 @@ spec:
     spec:
       containers:
       - name: beacon
-        image: "index.docker.io/consensys/teku:21.4.1"
+        image: "index.docker.io/consensys/teku:21.5.0"
         args:
         - --network=prater
         - --p2p-port=9000
         - --rest-api-enabled
         - --rest-api-host-allowlist=beacon-service.teku.svc.cluster.local
-        - --eth1-endpoint=http://127.0.0.1:8545
+        - --eth1-endpoints=http://127.0.0.1:8545,http://127.0.0.1:8546,http://127.0.0.1:8547
         - --data-beacon-path=/data/teku/beacon
         - --log-destination=CONSOLE
         ports:

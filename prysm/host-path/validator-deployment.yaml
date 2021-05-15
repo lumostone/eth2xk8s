@@ -27,30 +27,30 @@ spec:
         command: ['sh', '-c', 'echo "Wait for 780 second(s) for extra slashing protection!" && sleep 780']
       containers:
       - name: validator-client-1
-        image: "gcr.io/prysmaticlabs/prysm/validator:v1.3.8"
+        image: "gcr.io/prysmaticlabs/prysm/validator:v1.3.9"
         args:
         - --prater
         - --beacon-rpc-provider=beacon-service.prysm.svc.cluster.local:4000
-        - --datadir=/data/prysm/validator-client
-        - --wallet-dir=/data/prysm/wallet
+        - --datadir=/data/prysm/validator-client-1
+        - --wallet-dir=/data/prysm/wallet-1
         - --wallet-password-file=/data/prysm/password/wallet-pwd.txt
         - --graffiti="eth2 x k8s"
         - --accept-terms-of-use
-        volumeMounts:
-        - name: validator-client-storage
-          mountPath: /data/prysm/validator-client
+        volumeMounts:        
+        - name: prysm-validator-storage
+          mountPath: /data/prysm/validator-client-1
           readOnly: false
-        - name: wallet-storage
-          mountPath: /data/prysm/wallet
-          readOnly: false
+        - name: prysm-wallet-storage
+          mountPath: /data/prysm/wallet-1
+          readOnly: true
         - name: wallet-password
           mountPath: /data/prysm/password
           readOnly: true
-      volumes:
-      - name: validator-client-storage
+      volumes:      
+      - name: prysm-validator-storage
         hostPath:
           path: /data/prysm/validator-client-1
-      - name: wallet-storage
+      - name: prysm-wallet-storage
         hostPath:
           path: /data/prysm/wallet-1
       - name: wallet-password

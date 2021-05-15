@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: {{ .name }}
-        image: "{{ $.Values.image.beaconImage }}:{{ $.Values.image.version }}"
+        image: "{{ $.Values.image.beaconImage }}:{{ $.Values.image.versionTag }}"
         args:
         - lighthouse
         {{- if $.Values.ethereumTestnet }}

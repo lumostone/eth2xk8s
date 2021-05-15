@@ -39,7 +39,7 @@ image:
   validatorImage: index.docker.io/sigp/lighthouse
   # Lighthouse release version. 
   # Check https://github.com/sigp/lighthouse/releases for more info. 
-  version: v1.3.0
+  versionTag: v1.3.0
 
 # A required section that contains beacon chain information.
 beacon:
@@ -50,7 +50,7 @@ beacon:
   # If the type is set to "hostPath", it represents the volume path on the host node.
   dataDirPath: /data/lighthouse/beacon
   # Ethereum 1 node endpoints.
-  eth1Endpoints: 
+  eth1Endpoints:
     - http://127.0.0.1:8545
     - http://127.0.0.1:8546
     

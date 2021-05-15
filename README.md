@@ -8,7 +8,7 @@ This repository contains Kubernetes (k8s) manifests and Helm charts that help Et
 
 ## Detailed guide for running clients on Prater
 
-We've written [a blog post](https://lumostone.com/en/eth2-staking-with-k8s-prysm/) detailing the requirement and walkthrough for running Prysm on Prater. We'll add guides for other clients soon!
+We've written [a blog post](https://lumostone.com/en/posts/eth2-staking-with-k8s/) detailing the requirement and walkthrough for running Prysm on Prater. We'll add guides for other clients soon!
 
 ## Quick start: Install beacon node and validator with Helm
 

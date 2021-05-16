@@ -26,6 +26,7 @@ spec:
         - --{{ $.Values.ethereumTestnet }}
         {{- end }}
         - --rpc-host=0.0.0.0
+        - --monitoring-host=0.0.0.0
         - --p2p-tcp-port={{ .p2pTcpPort }}
         - --p2p-udp-port={{ .p2pUdpPort }}
         - --http-web3provider={{ first (required "At least one eth1 endpoint is required." .eth1Endpoints) }}
@@ -46,9 +47,32 @@ spec:
           protocol: UDP
         - containerPort: 4000
           protocol: TCP
+        - containerPort: 8080
+          protocol: TCP
+          name: metrics
         volumeMounts:
         - name: beacon-storage
           mountPath: /data/prysm/beacon
+        livenessProbe:
+          failureThreshold: 60 # beacon will restart every hour until it is fully synced
+          httpGet:
+            path: /healthz
+            port: metrics
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 60
+          successThreshold: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: metrics
+            scheme: HTTP
+          initialDelaySeconds: 180
+          periodSeconds: 60
+          successThreshold: 1
+          timeoutSeconds: 1
       volumes:
       - name: beacon-storage
         {{- if eq $.Values.persistentVolumeType "nfs" }}

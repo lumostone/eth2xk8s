@@ -54,23 +54,23 @@ spec:
         - name: beacon-storage
           mountPath: /data/prysm/beacon
         livenessProbe:
-          failureThreshold: 60 # beacon will restart every hour until it is fully synced
           httpGet:
             path: /healthz
             port: metrics
             scheme: HTTP
-          initialDelaySeconds: 60
+          initialDelaySeconds: 30
           periodSeconds: 60
+          failureThreshold: 60 # beacon will restart every hour until it is fully synced
           successThreshold: 1
           timeoutSeconds: 1
         readinessProbe:
-          failureThreshold: 3
           httpGet:
             path: /healthz
             port: metrics
             scheme: HTTP
-          initialDelaySeconds: 180
+          initialDelaySeconds: 30
           periodSeconds: 60
+          failureThreshold: 3
           successThreshold: 1
           timeoutSeconds: 1
       volumes:

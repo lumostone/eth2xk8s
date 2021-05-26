@@ -35,6 +35,8 @@ spec:
         - --data-dir={{ $client.dataDirPath }}
         - --validators-dir={{ $client.validatorsDirPath }}
         - --secrets-dir={{ $client.secretsDirPath }}
+        - --metrics-address=0.0.0.0
+        - --metrics:on
         {{- range .eth1Endpoints }}
         - --web3-url={{ . }}
         {{- end }}
@@ -46,6 +48,9 @@ spec:
         - containerPort: {{ $client.p2pUdpPort }}
           hostPort: {{ $client.p2pUdpPort }}
           protocol: UDP
+        - containerPort: 8008
+          protocol: TCP
+          name: metrics
         volumeMounts:
         {{- include "nimbus.volumeMounts" $client | indent 8 }}
       volumes:

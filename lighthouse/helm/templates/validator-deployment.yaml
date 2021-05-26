@@ -34,6 +34,12 @@ spec:
         - --beacon-nodes=http://{{ $.Values.beacon.name }}-service.{{ $.Values.namespace }}.svc.cluster.local:5052
         - --datadir={{ $validatorClient.dataDirPath }}
         - --graffiti={{ $validatorClient.graffiti | quote }}
+        - --metrics
+        - --metrics-address=0.0.0.0
+        ports:
+        - containerPort: 5064
+          protocol: TCP
+          name: metrics
         volumeMounts:
         - name: validator-client-storage
           mountPath: {{ $validatorClient.dataDirPath }}

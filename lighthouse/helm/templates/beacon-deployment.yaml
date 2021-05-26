@@ -31,6 +31,8 @@ spec:
         - --http-address=0.0.0.0
         - --eth1-endpoints={{ .eth1Endpoints | join "," }}
         - --datadir=/data/lighthouse/beacon
+        - --metrics
+        - --metrics-address=0.0.0.0
         ports:
         - containerPort: 9000
           hostPort: 9000
@@ -40,6 +42,9 @@ spec:
           protocol: UDP
         - containerPort: 5052
           protocol: TCP
+        - containerPort: 5054
+          protocol: TCP
+          name: metrics
         volumeMounts:
         - name: beacon-storage
           mountPath: /data/lighthouse/beacon

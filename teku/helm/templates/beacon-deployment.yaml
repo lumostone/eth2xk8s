@@ -27,10 +27,12 @@ spec:
         {{- end }}
         - --p2p-port={{ .p2pPort }}
         - --rest-api-enabled
-        - --rest-api-host-allowlist={{ $.Values.beacon.name }}-service.{{ $.Values.namespace }}.svc.cluster.local
+        - --rest-api-host-allowlist=*
         - --eth1-endpoints={{ .eth1Endpoints | join "," }}
         - --data-beacon-path=/data/teku/beacon
         - --log-destination=CONSOLE
+        - --metrics-enabled=true
+        - --metrics-interface=0.0.0.0
         ports:
         - containerPort: {{ .p2pPort }}
           hostPort: {{ .p2pPort }}
@@ -40,9 +42,35 @@ spec:
           protocol: UDP
         - containerPort: 5051
           protocol: TCP
+        - containerPort: 8008
+          protocol: TCP
+          name: metrics
+        - containerPort: 5051
+          protocol: TCP
+          name: rest-api
         volumeMounts:
         - name: beacon-storage
           mountPath: /data/teku/beacon
+        livenessProbe:
+          httpGet:
+            path: /teku/v1/admin/liveness
+            port: rest-api
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          failureThreshold: 5
+          successThreshold: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          httpGet:
+            path: /eth/v1/node/health
+            port: rest-api
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          failureThreshold: 5
+          successThreshold: 1
+          timeoutSeconds: 1
       volumes:
       - name: beacon-storage
         {{- if eq $.Values.persistentVolumeType "nfs" }}

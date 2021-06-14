@@ -42,12 +42,10 @@ spec:
           protocol: UDP
         - containerPort: 5051
           protocol: TCP
+          name: rest-api
         - containerPort: 8008
           protocol: TCP
           name: metrics
-        - containerPort: 5051
-          protocol: TCP
-          name: rest-api
         volumeMounts:
         - name: beacon-storage
           mountPath: /data/teku/beacon

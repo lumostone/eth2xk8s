@@ -36,7 +36,7 @@ spec:
         - --validators-dir={{ $client.validatorsDirPath }}
         - --secrets-dir={{ $client.secretsDirPath }}
         - --metrics-address=0.0.0.0
-        - --metrics:on
+        - --metrics
         {{- range .eth1Endpoints }}
         - --web3-url={{ . }}
         {{- end }}

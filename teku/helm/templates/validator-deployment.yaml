@@ -34,7 +34,13 @@ spec:
         - --data-validator-path={{ $validatorClient.dataDirPath }}
         - --validator-keys={{ $validatorClient.validatorKeysDirPath }}:{{ $validatorClient.validatorKeyPasswordsDirPath }}
         - --validators-graffiti={{ $validatorClient.graffiti | quote }}
+        - --metrics-enabled=true
+        - --metrics-interface=0.0.0.0
         - --log-destination=CONSOLE
+        ports:
+        - containerPort: 8008
+          protocol: TCP
+          name: metrics
         volumeMounts:
         {{- include "teku.volumeMounts" $validatorClient | indent 8 }}
       volumes:

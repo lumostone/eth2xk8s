@@ -35,13 +35,38 @@ spec:
         - --datadir={{ $validatorClient.dataDirPath }}
         - --wallet-dir={{ $validatorClient.walletDirPath }}
         - --wallet-password-file=/data/prysm/password/wallet-pwd.txt
+        - --monitoring-host=0.0.0.0
         - --graffiti={{ $validatorClient.graffiti | quote }}
         - --accept-terms-of-use
+        ports:
+        - containerPort: 8081
+          protocol: TCP
+          name: metrics
         volumeMounts:
         {{- include "prysm.volumeMounts" $validatorClient | indent 8 }}
         - name: wallet-password
           mountPath: /data/prysm/password
           readOnly: true
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          failureThreshold: 5
+          successThreshold: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          failureThreshold: 3
+          successThreshold: 1
+          timeoutSeconds: 1
       volumes:
       {{- include "prysm.volumes" (merge $validatorClient (pick $.Values "persistentVolumeType" "nfs")) | indent 6 }}
       - name: wallet-password

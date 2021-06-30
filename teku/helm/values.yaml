@@ -39,7 +39,7 @@ image:
   validatorImage: index.docker.io/consensys/teku
   # Teku release version. 
   # Check https://github.com/consensys/teku/releases for more info. 
-  versionTag: 21.5.0
+  versionTag: 21.6.0
 
 # A required section that contains beacon chain information.
 beacon:

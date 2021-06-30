@@ -21,10 +21,11 @@ spec:
     spec:
       containers:
       - name: beacon
-        image: "gcr.io/prysmaticlabs/prysm/beacon-chain:v1.3.9"
+        image: "gcr.io/prysmaticlabs/prysm/beacon-chain:v1.3.11"
         args:
         - --prater
         - --rpc-host=0.0.0.0
+        - --monitoring-host=0.0.0.0
         - --p2p-tcp-port=13000
         - --p2p-udp-port=12000
         - --http-web3provider=http://127.0.0.1:8545
@@ -42,9 +43,32 @@ spec:
           protocol: UDP
         - containerPort: 4000
           protocol: TCP
+        - containerPort: 8080
+          protocol: TCP
+          name: metrics
         volumeMounts:
         - name: beacon-storage
           mountPath: /data/prysm/beacon
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 60
+          failureThreshold: 60 # beacon will restart every hour until it is fully synced
+          successThreshold: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 60
+          failureThreshold: 3
+          successThreshold: 1
+          timeoutSeconds: 1
       volumes:
       - name: beacon-storage
         nfs:

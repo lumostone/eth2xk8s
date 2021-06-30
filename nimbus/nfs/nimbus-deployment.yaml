@@ -25,7 +25,7 @@ spec:
         command: ['sh', '-c', 'echo Wait for 780 seconds for extra slashing protection! && sleep 780']
       containers:
       - name: nimbus
-        image: "index.docker.io/statusim/nimbus-eth2:amd64-v1.2.2"
+        image: "index.docker.io/statusim/nimbus-eth2:amd64-v1.4.0"
         args:
         - --network=prater
         - --non-interactive
@@ -34,6 +34,8 @@ spec:
         - --data-dir=/data/nimbus/beacon-1
         - --validators-dir=/data/nimbus/validators-1
         - --secrets-dir=/data/nimbus/secrets-1
+        - --metrics-address=0.0.0.0
+        - --metrics
         - --web3-url=ws://127.0.0.1:8545
         - --web3-url=ws://127.0.0.1:8546
         - --web3-url=ws://127.0.0.1:8547
@@ -45,6 +47,9 @@ spec:
         - containerPort: 9000
           hostPort: 9000
           protocol: UDP
+        - containerPort: 8008
+          protocol: TCP
+          name: metrics
         volumeMounts:        
         - name: nimbus-beacon-storage
           mountPath: /data/nimbus/beacon-1

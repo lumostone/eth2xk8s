@@ -21,15 +21,17 @@ spec:
     spec:
       containers:
       - name: beacon
-        image: "index.docker.io/consensys/teku:21.5.0"
+        image: "index.docker.io/consensys/teku:21.6.0"
         args:
         - --network=prater
         - --p2p-port=9000
         - --rest-api-enabled
-        - --rest-api-host-allowlist=beacon-service.teku.svc.cluster.local
+        - --rest-api-host-allowlist=*
         - --eth1-endpoints=http://127.0.0.1:8545,http://127.0.0.1:8546,http://127.0.0.1:8547
         - --data-beacon-path=/data/teku/beacon
         - --log-destination=CONSOLE
+        - --metrics-enabled=true
+        - --metrics-interface=0.0.0.0
         ports:
         - containerPort: 9000
           hostPort: 9000
@@ -39,9 +41,33 @@ spec:
           protocol: UDP
         - containerPort: 5051
           protocol: TCP
+          name: rest-api
+        - containerPort: 8008
+          protocol: TCP
+          name: metrics
         volumeMounts:
         - name: beacon-storage
           mountPath: /data/teku/beacon
+        livenessProbe:
+          httpGet:
+            path: /teku/v1/admin/liveness
+            port: rest-api
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          failureThreshold: 5
+          successThreshold: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          httpGet:
+            path: /eth/v1/node/health
+            port: rest-api
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          failureThreshold: 5
+          successThreshold: 1
+          timeoutSeconds: 1
       volumes:
       - name: beacon-storage
         nfs:

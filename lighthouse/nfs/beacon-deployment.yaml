@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: beacon
-        image: "index.docker.io/sigp/lighthouse:v1.3.0"
+        image: "index.docker.io/sigp/lighthouse:v1.4.0"
         args:
         - lighthouse
         - --network=prater
@@ -30,6 +30,8 @@ spec:
         - --http-address=0.0.0.0
         - --eth1-endpoints=http://127.0.0.1:8545,http://127.0.0.1:8546
         - --datadir=/data/lighthouse/beacon
+        - --metrics
+        - --metrics-address=0.0.0.0
         ports:
         - containerPort: 9000
           hostPort: 9000
@@ -39,6 +41,9 @@ spec:
           protocol: UDP
         - containerPort: 5052
           protocol: TCP
+        - containerPort: 5054
+          protocol: TCP
+          name: metrics
         volumeMounts:
         - name: beacon-storage
           mountPath: /data/lighthouse/beacon

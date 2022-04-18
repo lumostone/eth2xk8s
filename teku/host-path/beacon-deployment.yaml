@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: beacon
-        image: "index.docker.io/consensys/teku:21.6.0"
+        image: "index.docker.io/consensys/teku:22.4.0"
         args:
         - --network=prater
         - --p2p-port=9000
@@ -45,9 +45,13 @@ spec:
         - containerPort: 8008
           protocol: TCP
           name: metrics
-        volumeMounts:
-        - name: beacon-storage
+        volumeMounts:        
+        - name: teku-beacon-storage
           mountPath: /data/teku/beacon
+          readOnly: false
+        - name: teku-local-storage
+          mountPath: /.local/share/teku
+          readOnly: false
         livenessProbe:
           httpGet:
             path: /teku/v1/admin/liveness
@@ -68,10 +72,13 @@ spec:
           failureThreshold: 5
           successThreshold: 1
           timeoutSeconds: 1
-      volumes:
-      - name: beacon-storage
+      volumes:      
+      - name: teku-beacon-storage
         hostPath:
           path: /data/teku/beacon
+      - name: teku-local-storage
+        hostPath:
+          path: /data/teku/local
       securityContext:
         runAsGroup: 2000
         runAsUser: 1001

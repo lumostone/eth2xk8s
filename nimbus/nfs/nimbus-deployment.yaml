@@ -25,7 +25,7 @@ spec:
         command: ['sh', '-c', 'echo Wait for 780 seconds for extra slashing protection! && sleep 780']
       containers:
       - name: nimbus
-        image: "index.docker.io/statusim/nimbus-eth2:amd64-v1.4.0"
+        image: "index.docker.io/statusim/nimbus-eth2:amd64-v22.4.0"
         args:
         - --network=prater
         - --non-interactive

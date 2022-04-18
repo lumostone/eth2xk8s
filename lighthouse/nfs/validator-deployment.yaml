@@ -25,7 +25,7 @@ spec:
         command: ['sh', '-c', 'echo "Wait for 780 second(s) for extra slashing protection!" && sleep 780']
       containers:
       - name: validator-client-1
-        image: "index.docker.io/sigp/lighthouse:v1.4.0"
+        image: "index.docker.io/sigp/lighthouse:v2.2.1"
         args:
         - lighthouse
         - --network=prater

@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: beacon
-        image: "index.docker.io/sigp/lighthouse:v1.4.0"
+        image: "index.docker.io/sigp/lighthouse:v2.2.1"
         args:
         - lighthouse
         - --network=prater
@@ -50,7 +50,7 @@ spec:
       volumes:
       - name: beacon-storage
         nfs:
-          path: /data/lighthouse/beacon
+          path: /data/lighthouse
           server: 172.20.10.10
           readOnly: false
       securityContext:

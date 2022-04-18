@@ -27,7 +27,7 @@ spec:
         command: ['sh', '-c', 'echo "Wait for 780 second(s) for extra slashing protection!" && sleep 780']
       containers:
       - name: validator-client-1
-        image: "gcr.io/prysmaticlabs/prysm/validator:v1.3.11"
+        image: "gcr.io/prysmaticlabs/prysm/validator:v2.0.6"
         args:
         - --prater
         - --beacon-rpc-provider=beacon-service.prysm.svc.cluster.local:4000

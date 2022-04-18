@@ -25,7 +25,7 @@ spec:
         command: ['sh', '-c', 'echo "Wait for 780 second(s) for extra slashing protection!" && sleep 780']
       containers:
       - name: validator-client-1
-        image: "index.docker.io/consensys/teku:21.6.0"
+        image: "index.docker.io/consensys/teku:22.4.0"
         args:
         - vc
         - --network=prater
@@ -41,6 +41,9 @@ spec:
           protocol: TCP
           name: metrics
         volumeMounts:        
+        - name: teku-local-storage
+          mountPath: /.local/share/teku
+          readOnly: false
         - name: teku-validator-storage
           mountPath: /data/teku/validator-client-1
           readOnly: false
@@ -51,6 +54,9 @@ spec:
           mountPath: /data/teku/validator-keys-1
           readOnly: false
       volumes:      
+      - name: teku-local-storage
+        hostPath:
+          path: /data/teku/local
       - name: teku-validator-storage
         hostPath:
           path: /data/teku/validator-client-1

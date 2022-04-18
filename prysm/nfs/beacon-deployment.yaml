@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: beacon
-        image: "gcr.io/prysmaticlabs/prysm/beacon-chain:v1.3.11"
+        image: "gcr.io/prysmaticlabs/prysm/beacon-chain:v2.0.6"
         args:
         - --prater
         - --rpc-host=0.0.0.0

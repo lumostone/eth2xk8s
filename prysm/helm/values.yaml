@@ -42,7 +42,7 @@ image:
   validatorImage: gcr.io/prysmaticlabs/prysm/validator 
   # Prysm release version. 
   # Check https://github.com/prysmaticlabs/prysm/releases for more info. 
-  versionTag: v1.3.11
+  versionTag: v2.0.6
 
 # A required section that contains beacon chain information.
 beacon:
@@ -92,7 +92,7 @@ validatorClients:
     walletPasswordSecretName: wallet-password-1
     # The wallet password.
     # It's recommended to have different value for each validator client to avoid using the wrong password.
-    walletPassword: "example-password-1"  
+    walletPassword: "example-password-1"
     # A mark you want to leave each time the validator client proposes a block.
     # It can be a message or a pixel (on the graffiti wall).
     # See https://beaconcha.in/charts/graffiti_wordcloud for example.

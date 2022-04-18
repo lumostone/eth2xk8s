@@ -36,7 +36,7 @@ image:
   nimbusImage: index.docker.io/statusim/nimbus-eth2
   # Nimbus release version. 
   # Check https://github.com/status-im/nimbus-eth2/releases for release info. 
-  versionTag: amd64-v1.4.0
+  versionTag: amd64-v22.4.0
 
 # A required section that contains Nimbus client information.
 nimbus:

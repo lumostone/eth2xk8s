@@ -39,7 +39,7 @@ image:
   validatorImage: index.docker.io/sigp/lighthouse
   # Lighthouse release version. 
   # Check https://github.com/sigp/lighthouse/releases for more info. 
-  versionTag: v1.4.0
+  versionTag: v2.2.1
 
 # A required section that contains beacon chain information.
 beacon:
@@ -48,11 +48,15 @@ beacon:
   # The path to the beacon chain data directory. 
   # If persistentVolumeType is set to "nfs", this variable represents the data volume path on NFS.
   # If the type is set to "hostPath", it represents the volume path on the host node.
-  dataDirPath: /data/lighthouse/beacon
+  dataDirPath: /data/lighthouse
   # Ethereum 1 node endpoints.
   eth1Endpoints:
     - http://127.0.0.1:8545
     - http://127.0.0.1:8546
+  # An optional flag to enable syncing from a recent finalized checkpoint instead of syncing from genesis.
+  # To enable this functionality, set this flag to another synced beacon node and delete the existing beacon database.
+  # Check https://lighthouse-book.sigmaprime.io/checkpoint-sync.html?highlight=finalized#checkpoint-sync for more info.
+  # checkpointSyncURL: https://<PROJECT-ID>:<PROJECT-SECRET>@eth2-beacon-mainnet.infura.io
     
 # This field determines how long it will wait before the validator client starts or restarts.
 # It's a way to protect the validator client from double attesting or block proposing when the DB is out-of-date.

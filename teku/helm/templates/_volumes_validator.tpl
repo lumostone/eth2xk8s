@@ -1,12 +1,12 @@
-{{- define "teku.volumes" }}
-{{- $uniqueVolumes := fromYaml (include "teku.unique.volumes" . ) }}
+{{- define "teku.volumes.validator" }}
+{{- $uniqueVolumes := fromYaml (include "teku.unique.volumes.validator" . ) }}
 {{- range $volumePath, $volumeName := $uniqueVolumes }}
 - name: {{ $volumeName }}
 {{- if eq $.persistentVolumeType "nfs" }}
   nfs:
     path: {{ $volumePath }}
     server: {{ $.nfs.serverIp }}
-    readOnly: {{ and (ne $volumePath $.dataDirPath) (ne $volumePath $.validatorKeysDirPath) }}
+    readOnly: {{ eq $volumePath $.validatorKeyPasswordsDirPath }}
 {{- else }}
   hostPath:
     path: {{ $volumePath }}

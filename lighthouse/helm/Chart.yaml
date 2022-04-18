@@ -3,5 +3,5 @@ name: eth2-lighthouse
 description: A Helm chart for Ethereum 2 client - Lighthouse
 
 type: application
-version: 0.1.2
-appVersion: "1.4.0"
+version: 0.1.3
+appVersion: "2.2.1"

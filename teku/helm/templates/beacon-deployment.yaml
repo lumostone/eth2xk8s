@@ -33,6 +33,9 @@ spec:
         - --log-destination=CONSOLE
         - --metrics-enabled=true
         - --metrics-interface=0.0.0.0
+        {{- if .checkpointSyncURL }}
+        - --initial-state={{ .checkpointSyncURL }}
+        {{- end }}
         ports:
         - containerPort: {{ .p2pPort }}
           hostPort: {{ .p2pPort }}
@@ -47,8 +50,7 @@ spec:
           protocol: TCP
           name: metrics
         volumeMounts:
-        - name: beacon-storage
-          mountPath: /data/teku/beacon
+        {{- include "teku.volumeMounts.beacon" (merge . (pick $.Values "localDirPath" ))  | indent 8 }}
         livenessProbe:
           httpGet:
             path: /teku/v1/admin/liveness
@@ -70,16 +72,7 @@ spec:
           successThreshold: 1
           timeoutSeconds: 1
       volumes:
-      - name: beacon-storage
-        {{- if eq $.Values.persistentVolumeType "nfs" }}
-        nfs:
-          path: {{ .dataDirPath }}
-          server: {{ $.Values.nfs.serverIp }}
-          readOnly: false
-        {{- else }}
-        hostPath:
-          path: {{ .dataDirPath }}
-        {{- end }}
+      {{- include "teku.volumes.beacon" (merge . (pick $.Values "persistentVolumeType" "nfs" "localDirPath" )) | indent 6 }}
       securityContext:
         {{- toYaml $.Values.securityContext | nindent 8 }}
       serviceAccountName: beacon

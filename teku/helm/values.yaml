@@ -16,6 +16,10 @@ nfs:
   # IP address of the NFS server.
   serverIp: 172.20.10.10
 
+# Local folder to store logs and other data.
+# See https://docs.teku.consensys.net/en/latest/HowTo/Monitor/Logging/ for more info.
+localDirPath: /data/teku/local
+
 securityContext:
   # The user ID will be used to run all processes in the container. The user should have the access to the mounted volume.
   # All directories and files created with the processes are owned by this user.
@@ -39,7 +43,7 @@ image:
   validatorImage: index.docker.io/consensys/teku
   # Teku release version. 
   # Check https://github.com/consensys/teku/releases for more info. 
-  versionTag: 21.6.0
+  versionTag: 22.4.0
 
 # A required section that contains beacon chain information.
 beacon:
@@ -57,6 +61,10 @@ beacon:
   # TCP and UDP port opened for P2P connection with the beacon node.
   # See https://docs.teku.consensys.net/en/latest/Reference/CLI/CLI-Syntax/#p2p-port for more info.
   p2pPort: 9000
+  # An optional flag to enable syncing from a recent finalized checkpoint instead of syncing from genesis.
+  # To enable this functionality, set this flag to another synced beacon node and delete the existing beacon database.
+  # Check https://docs.teku.consensys.net/en/latest/HowTo/Get-Started/Checkpoint-Start/ for more info.
+  # checkpointSyncURL: https://<PROJECT-ID>:<PROJECT-SECRET>@eth2-beacon-mainnet.infura.io/eth/v2/debug/beacon/states/finalized
 
 # This field determines how long it will wait before the validator client starts or restarts.
 # It's a way to protect the validator client from double attesting or block proposing when the DB is out-of-date.

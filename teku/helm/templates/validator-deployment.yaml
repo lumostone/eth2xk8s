@@ -42,9 +42,9 @@ spec:
           protocol: TCP
           name: metrics
         volumeMounts:
-        {{- include "teku.volumeMounts" $validatorClient | indent 8 }}
+        {{- include "teku.volumeMounts.validator" (merge $validatorClient (pick $.Values "localDirPath" ))  | indent 8 }}
       volumes:
-      {{- include "teku.volumes" (merge $validatorClient (pick $.Values "persistentVolumeType" "nfs")) | indent 6 }}
+      {{- include "teku.volumes.validator" (merge $validatorClient (pick $.Values "persistentVolumeType" "nfs" "localDirPath" )) | indent 6 }}
       securityContext:
         {{- toYaml $.Values.securityContext | nindent 8 }}
       serviceAccountName: validator-client
